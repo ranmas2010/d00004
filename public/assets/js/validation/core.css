@@ -1,0 +1,72 @@
+/*body, div { font-family: 'lucida grande', helvetica, verdana, arial, sans-serif }
+body { margin: 0; padding: 0; font-size: small; color: #333 }
+h1, h2 { font-family: 'trebuchet ms', verdana, arial; padding: 10px; margin: 0 }
+h1 { font-size: large }
+#main { padding: 1em; }
+#banner { padding: 15px; background-color: #06b; color: white; font-size: large; border-bottom: 1px solid #ccc;
+    background: url(../images/bg.gif) repeat-x; text-align: center }
+#banner a { color: white; }
+	
+p { margin: 10px 0; }
+
+li { margin-left: 10px; }
+
+h3 { margin: 1em 0 0; }
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.6em; }
+h4 { font-size: 1.4em; }
+h5 { font-size: 1.2em; }*/
+::-webkit-input-placeholder {
+    color:    #999;
+}
+:-moz-placeholder {
+    color:    #999;
+}
+::-moz-placeholder {
+    color:    #999;
+}
+:-ms-input-placeholder {
+    color:    #999;
+}
+
+.pColor::-webkit-input-placeholder
+{
+  color:    #FF0000;
+}
+
+.pColor:-moz-placeholder
+{
+  color:    #FF0000;
+}
+
+.pColor::-moz-placeholder
+{
+  color:    #FF0000;
+}
+
+.pColor:-ms-input-placeholder
+{
+  color:    #FF0000;
+}
+
+
+.formError{
+	width: 100%;
+	background: #A1282F;
+	position:relative;
+	color: #fff;
+	width: 200px;
+	font-size: 12px;
+	border: 2px solid #ddd;
+	box-shadow: 0 0 6px #000;
+	-moz-box-shadow: 0 0 6px #000;
+	-webkit-box-shadow: 0 0 6px #000;
+	padding: 4px 10px 4px 10px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	line-height:1.2;
+}
+

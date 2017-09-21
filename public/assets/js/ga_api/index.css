@@ -1,0 +1,48 @@
+/**
+ * DateRangeSelector Component
+ */
+
+.DateRangeSelector {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+  margin: 0 0 -1em -1em;
+}
+
+.DateRangeSelector-item {
+  margin: 0 0 1em 1em;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 -webkit-calc(100% - 1em);
+      -ms-flex: 1 0 calc(100% - 1em);
+          flex: 1 0 calc(100% - 1em);
+}
+
+.DateRangeSelector-item > label {
+  font-weight: 700;
+  margin: 0 .25em .25em 0;
+  display: block;
+  white-space: nowrap; 
+  display:none;
+}
+
+.DateRangeSelector-item > input {
+  width: 100%;
+  color:#000000;
+  height:35px;
+  margin-top:3px;
+  
+  
+}
+
+@media (min-width: 570px) {
+  .DateRangeSelector-item {
+    -webkit-flex-basis: auto;
+        -ms-flex-preferred-size: auto;
+            flex-basis: auto;
+    min-width:150px;
+  }
+}

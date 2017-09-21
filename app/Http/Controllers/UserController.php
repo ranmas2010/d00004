@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Account;
+//use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //return view('user.profile', ['user' => Account::findOrFail($id)]);
+
+       
+       // return Account::all();
+
+        return "1111";
+    }
+}
