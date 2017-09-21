@@ -1186,90 +1186,124 @@ class Controller extends BaseController
 
         $rePayData = $request->all();//取得購物回傳資訊
 
-        $shopData = httpFunction::getShopList();
-        $data['shopList'] = $shopData["shopList"];
-        $data['shopTotalPrice'] = $shopData["totalPrice"];
-        $data['shopTotalQty'] = $shopData["totalQty"];
-        $data['shopTotalPriceAndFare'] = $shopData["totalPrice"];//含運費總金額
-        $fareData  = httpFunction::fareCalculation($data['shopTotalPriceAndFare']);//運費計算
-
-        //交易成功
-        if($rePayData['RtnCode'] == '1')
+        $data = array();
+        //後續處理
+        if($rePayData['RtnCode'] == '1' && ( strstr($rePayData['PaymentType'],'ATM') || strstr($rePayData['PaymentType'],'CVS')  || strstr($rePayData['PaymentType'],'BARCODE')))
         {
 
-           // dd($rePayData);
-
-            //寫入購物資訊
-            DbFunction::InsertDB('order_pay_data', $rePayData);
 
 
-
-            //寫入購物車
-            $shopCarMember = session('shopCarMember');
-            $shopCarMember['or_no'] = $rePayData['MerchantTradeNo'];
-            $shopCarMember['guid'] = httpFunction::getGUID();
-            $shopCarMember['member_id'] ='0';
-
-
-            if(Session::has('memberData'))
-            {
-                $shopCarMember['member_id'] = session('shopCarMember')->id;
-            }
-            $shopCarMember['date'] = date('Y-m-d H:i:s');
-
-            $shopCarMember['status'] = 'N';
-            //信用卡交易
-            if($rePayData['PaymentType'] == 'Credit_CreditCard')
-            {
-                $shopCarMember['status'] = 'B';
-            }
-
-            $shopCarMember['total_price'] = $fareData["shopTotalPriceAndFare"];//含運費總金額
-            $shopCarMember['fare_price'] =  $fareData["fare"];//運費
-            $shopCarMember['product_price'] = $data['shopTotalPrice'];//商品金額
-            $shopCarMember['total_qty'] = $data['shopTotalQty'];//商品金額
-
-            //寫入購買細項
-            $payList = '';
-            for($ii=0;$ii<count($data['shopList']);$ii++)
-            {
-                $specData = array();
-                $specData['guid'] = httpFunction::getGUID().$ii;
-                $specData['ouid'] = $shopCarMember['guid'];
-                $specData['puid'] = $data['shopList'][$ii]['puid'];
-                $specData['suid'] = '';
-                $specData['qty'] = $data['shopList'][$ii]['qty'];
-                $specData['title'] = $data['shopList'][$ii]['productTitle'];
-                $specData['spec_title'] = $data['shopList'][$ii]['specTitleList'];
-                $specData['price'] = $data['shopList'][$ii]['price'];
-                DbFunction::InsertDB('order_spec', $specData);
-
-                //扣庫存
-                $updateSQL = "update `product` set `inventory` = `inventory` - ".$specData['qty']." where guid = ? ";
-                DB::update($updateSQL, array($specData['puid']));
+            return '1|OK';
+        }
+        //首次結帳
+        else
+        {
+                $shopData = httpFunction::getShopList();
+                $data['shopList'] = $shopData["shopList"];
+                $data['shopTotalPrice'] = $shopData["totalPrice"];
+                $data['shopTotalQty'] = $shopData["totalQty"];
+                $data['shopTotalPriceAndFare'] = $shopData["totalPrice"];//含運費總金額
+                $fareData  = httpFunction::fareCalculation($data['shopTotalPriceAndFare']);//運費計算
 
 
-                $payList .= ' <tr style="background-color:#FFFFFF;">
-                          <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px; width: 80px; border:1px #cccccc solid;">&nbsp;&nbsp;'.$specData['title'].' </td>
-                          <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px; border:1px #cccccc solid;">&nbsp;&nbsp; '.$specData['qty'].'</td>
-                          <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px;  border:1px #cccccc solid;">&nbsp;&nbsp; '.($specData['qty'] * $specData['price']).'</td>
-                        </tr>';
+                //寫入購物資訊
+                DbFunction::InsertDB('order_pay_data', $rePayData);
+                $shopCarMember['status'] = 'N';
 
-            }
+                $canAddOrder = 'N';
+                //交易成功
+                //信用卡
+                if($rePayData['RtnCode'] == '1' && $rePayData['PaymentType'] == 'Credit_CreditCard')
+                {
+                    $canAddOrder = 'Y';
+                    $shopCarMember['status'] = 'B';
+                }
+                //信用卡
+                if($rePayData['RtnCode'] == '2' && (strstr($rePayData['PaymentType'],'ATM') || strstr($rePayData['PaymentType'],'CVS')  || strstr($rePayData['PaymentType'],'BARCODE')))
+                {
+                    $canAddOrder = 'Y';
+                }
 
-            DbFunction::InsertDB('order_data', $shopCarMember);//寫入訂單主檔
+                //金流成功
+                if($canAddOrder == 'Y')
+                {
+                    //寫入購物車
+                    $shopCarMember = session('shopCarMember');
+                    $shopCarMember['or_no'] = $rePayData['MerchantTradeNo'];
+                    $shopCarMember['guid'] = httpFunction::getGUID();
+                    $shopCarMember['member_id'] ='0';
 
 
+                    if(Session::has('memberData'))
+                    {
+                        $shopCarMember['member_id'] = session('shopCarMember')->id;
+                    }
+                    $shopCarMember['date'] = date('Y-m-d H:i:s');
 
 
+                    $shopCarMember['total_price'] = $fareData["shopTotalPriceAndFare"];//含運費總金額
+                    $shopCarMember['fare_price'] =  $fareData["fare"];//運費
+                    $shopCarMember['product_price'] = $data['shopTotalPrice'];//商品金額
+                    $shopCarMember['total_qty'] = $data['shopTotalQty'];//商品金額
+
+                    //寫入購買細項
+                    $payList = '';
+                    for($ii=0;$ii<count($data['shopList']);$ii++)
+                    {
+                        $specData = array();
+                        $specData['guid'] = httpFunction::getGUID().$ii;
+                        $specData['ouid'] = $shopCarMember['guid'];
+                        $specData['puid'] = $data['shopList'][$ii]['puid'];
+                        $specData['suid'] = '';
+                        $specData['qty'] = $data['shopList'][$ii]['qty'];
+                        $specData['title'] = $data['shopList'][$ii]['productTitle'];
+                        $specData['spec_title'] = $data['shopList'][$ii]['specTitleList'];
+                        $specData['price'] = $data['shopList'][$ii]['price'];
+                        DbFunction::InsertDB('order_spec', $specData);
+
+                        //扣庫存
+                        $updateSQL = "update `product` set `inventory` = `inventory` - ".$specData['qty']." where guid = ? ";
+                        DB::update($updateSQL, array($specData['puid']));
+
+
+                        $payList .= ' <tr style="background-color:#FFFFFF;">
+                                  <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px; width: 80px; border:1px #cccccc solid;">&nbsp;&nbsp;'.$specData['title'].' </td>
+                                  <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px; border:1px #cccccc solid;">&nbsp;&nbsp; '.$specData['qty'].'</td>
+                                  <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px;  border:1px #cccccc solid;">&nbsp;&nbsp; '.($specData['qty'] * $specData['price']).'</td>
+                                </tr>';
+
+                    }
+
+                    DbFunction::InsertDB('order_data', $shopCarMember);//寫入訂單主檔
+
+                    Session::forget('shopCar');
+                    Session::forget('shopCarMember');
+
+                    return view('home.payEnd' , $data);
+
+                }
+                else{
+
+
+                    //交易失敗
+                    $data['altTitle'] = '交易失敗';
+                    $data['type'] = 'error';
+                    $data['confirmButtonText'] = '確定';
+                    if($rePayData['PaymentType'] == 'Credit_CreditCard')
+                    {
+                        $data['altSubTitle'] = '請檢查您的卡號或其他資訊是否輸入正確!';
+                    }
+                    else
+                    {
+                        $data['altSubTitle'] = '取號失敗，請重新選擇!';
+                    }
+
+                    return view('home.alert' , $data);
+                }
 
         }
 
 
-
-
-
-        return '1|OK';
     }
 
 

@@ -45,162 +45,7 @@
 
                                         <!-- Tab panes -->
                                         <div class="tab-content">
-                                            <!-- shopping-cart start -->
-                                            <div class="tab-pane" id="shopping-cart">
-                                                <form action="#">
-                                                    <div class="shop-cart-table">
-                                                        <div class="table-content table-responsive">
-                                                            <table>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th class="product-thumbnail">Product</th>
-                                                                    <th class="product-price">Price</th>
-                                                                    <th class="product-quantity">Quantity</th>
-                                                                    <th class="product-subtotal">Total</th>
-                                                                    <th class="product-remove">Remove</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td class="product-thumbnail  text-left">
-                                                                        <!-- Single-product start -->
-                                                                        <div class="single-product">
-                                                                            <div class="product-img">
-                                                                                <a href="single-product.html"><img src="img/product/2.jpg" alt="" /></a>
-                                                                            </div>
-                                                                            <div class="product-info">
-                                                                                <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                                <p class="mb-0">Color :  Black</p>
-                                                                                <p class="mb-0">Size :     SL</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- Single-product end -->
-                                                                    </td>
-                                                                    <td class="product-price">$56.00</td>
-                                                                    <td class="product-quantity">
-                                                                        <div class="cart-plus-minus">
-                                                                            <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="product-subtotal">$112.00</td>
-                                                                    <td class="product-remove">
-                                                                        <a href="#"><i class="zmdi zmdi-close"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="product-thumbnail  text-left">
-                                                                        <!-- Single-product start -->
-                                                                        <div class="single-product">
-                                                                            <div class="product-img">
-                                                                                <a href="single-product.html"><img src="img/product/12.jpg" alt="" /></a>
-                                                                            </div>
-                                                                            <div class="product-info">
-                                                                                <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                                <p class="mb-0">Color :  Black</p>
-                                                                                <p class="mb-0">Size :     SL</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- Single-product end -->
-                                                                    </td>
-                                                                    <td class="product-price">$56.00</td>
-                                                                    <td class="product-quantity">
-                                                                        <div class="cart-plus-minus">
-                                                                            <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="product-subtotal">$112.00</td>
-                                                                    <td class="product-remove">
-                                                                        <a href="#"><i class="zmdi zmdi-close"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="product-thumbnail  text-left">
-                                                                        <!-- Single-product start -->
-                                                                        <div class="single-product">
-                                                                            <div class="product-img">
-                                                                                <a href="single-product.html"><img src="img/product/6.jpg" alt="" /></a>
-                                                                            </div>
-                                                                            <div class="product-info">
-                                                                                <h4 class="post-title"><a class="text-light-black" href="#">dummy product name</a></h4>
-                                                                                <p class="mb-0">Color :  Black</p>
-                                                                                <p class="mb-0">Size :     SL</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- Single-product end -->
-                                                                    </td>
-                                                                    <td class="product-price">$56.00</td>
-                                                                    <td class="product-quantity">
-                                                                        <div class="cart-plus-minus">
-                                                                            <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="product-subtotal">$112.00</td>
-                                                                    <td class="product-remove">
-                                                                        <a href="#"><i class="zmdi zmdi-close"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="customer-login mt-30">
-                                                                <h4 class="title-1 title-border text-uppercase">coupon discount</h4>
-                                                                <p class="text-gray">Enter your coupon code if you have one!</p>
-                                                                <input type="text" placeholder="Enter your code here.">
-                                                                <button type="submit" data-text="apply coupon" class="button-one submit-button mt-15">apply coupon</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="customer-login payment-details mt-30">
-                                                                <h4 class="title-1 title-border text-uppercase">payment details</h4>
-                                                                <table>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td class="text-left">Cart Subtotal</td>
-                                                                        <td class="text-right">$155.00</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td class="text-left">Cart Subtotal</td>
-                                                                        <td class="text-right">$15.00</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td class="text-left">Vat</td>
-                                                                        <td class="text-right">$00.00</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td class="text-left">Order Total</td>
-                                                                        <td class="text-right">$170.00</td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="customer-login mt-30">
-                                                                <h4 class="title-1 title-border text-uppercase">culculate shipping</h4>
-                                                                <p class="text-gray">Enter your coupon code if you have one!</p>
-                                                                <div class="row">
-                                                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                                                        <input type="text" placeholder="Country">
-                                                                    </div>
-                                                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                                                        <input type="text" placeholder="Region / State">
-                                                                    </div>
-                                                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                                                        <input type="text" placeholder="Post code">
-                                                                    </div>
-                                                                </div>
-                                                                <button type="submit" data-text="get a quote" class="button-one submit-button mt-15">get a quote</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <!-- shopping-cart end -->
+
 
                                             <!-- check-out start -->
                                             <div class="tab-pane active" id="check-out">
@@ -215,7 +60,7 @@
                                                                         <div class="_formErrorMsg"></div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <input type="text" name="company" id="company" placeholder="公司名稱" required value="@if(count($memberData)>0){{$memberData->company}}@endif">
+                                                                        <input type="text" name="company" id="company" placeholder="公司名稱"  value="@if(count($memberData)>0){{$memberData->company}}@endif">
                                                                         <div class="_formErrorMsg"></div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -319,6 +164,7 @@
 
                                                                         </div>
                                                                         <!-- Accordion end -->
+                                                                        <hr>
                                                                         <button type="submit" data-text="下一步" class="theme-btn btn-style-for">確認結帳</button>
                                                                     </div>
                                                                 </div>
