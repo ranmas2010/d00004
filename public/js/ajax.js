@@ -1328,6 +1328,8 @@ function useAjax(ACT , needVal){
 					}
 					else
 					{
+
+						setLoadPlayer('none');
 						swal({
 								title: "購物資訊",
 								text: "確認資料填寫無誤?",

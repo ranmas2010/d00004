@@ -39,7 +39,6 @@ class Controller extends BaseController
 
         $this->server_name = $pachTitle.$request->server('SERVER_NAME');//取的網址
 
-
     }
 
     /**
@@ -994,11 +993,12 @@ class Controller extends BaseController
         }
         else
         {
-            $data['menuTitle'] = '購物車';
-            $data['title'] = '您尚無任何購物商品喔!';
-            $data['subTitle'] = '';
-            $data['notes'] = '';
-            return view('home.send' , $data);
+            $data['altTitle'] = '系統訊息';
+            $data['type'] = 'error';
+            $data['confirmButtonText'] = '確定';
+            $data['altSubTitle'] = '您尚未購買讓何商品喔!';
+            $data['url'] = '';
+            return view('home.alert' , $data);
 
         }
 
@@ -1094,11 +1094,12 @@ class Controller extends BaseController
         }
         else
         {
-            $data['menuTitle'] = '購物車';
-            $data['title'] = '您尚無任何購物商品喔!';
-            $data['subTitle'] = '';
-            $data['notes'] = '';
-            return view('home.send' , $data);
+            $data['altTitle'] = '系統訊息';
+            $data['type'] = 'error';
+            $data['confirmButtonText'] = '確定';
+            $data['altSubTitle'] = '您尚未購買讓何商品喔!';
+            $data['url'] = '';
+            return view('home.alert' , $data);
 
         }
 
@@ -1168,10 +1169,10 @@ class Controller extends BaseController
                 $payData['HashKey'] = '5294y06JbISpM5x9';
                 $payData['HashIV'] = 'v77hoKGq4kWxNNIS';
                 $payData['ServiceURL'] ='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
-                $payData['ReturnURL'] = $this->server_name.'/payEnd';
+                $payData['ReturnURL'] = $this->server_name.'/payRe';
                 $payData['OrderResultURL'] = $this->server_name.'/payEnd';
                 $payData['ClientRedirectURL'] = $this->server_name.'/payEnd';
-
+                //$payData['PeriodReturnURL'] = $this->server_name.'/re.php';
 
 
         \App\Http\Controllers\PaySDK::runPaySDK($payData['bank']  , $payData, $data);
@@ -1181,23 +1182,29 @@ class Controller extends BaseController
         return;
     }
 
+    /**
+     * 信用卡以外接收付款通知通道
+     * @param Request $request
+     */
+    public function payRe(Request $request){
 
+        $rePayData = $request->all();//取得購物回傳資訊
+        $rePayData['editID'] = $rePayData['MerchantTradeNo'];
+        unset($rePayData['MerchantTradeNo']);
+        DbFunction::UpdateDB('order_pay_data' , $rePayData);
+        echo "1|OK";
+    }
+
+
+    /**
+     * 結帳處理
+     * @param Request $request
+     * @return string
+     */
     public function payEnd(Request $request){
 
         $rePayData = $request->all();//取得購物回傳資訊
-
         $data = array();
-        //後續處理
-        if($rePayData['RtnCode'] == '1' && ( strstr($rePayData['PaymentType'],'ATM') || strstr($rePayData['PaymentType'],'CVS')  || strstr($rePayData['PaymentType'],'BARCODE')))
-        {
-
-
-
-            return '1|OK';
-        }
-        //首次結帳
-        else
-        {
                 $shopData = httpFunction::getShopList();
                 $data['shopList'] = $shopData["shopList"];
                 $data['shopTotalPrice'] = $shopData["totalPrice"];
@@ -1236,7 +1243,7 @@ class Controller extends BaseController
 
                     if(Session::has('memberData'))
                     {
-                        $shopCarMember['member_id'] = session('shopCarMember')->id;
+                        $shopCarMember['member_id'] = session('memberData')->id;
                     }
                     $shopCarMember['date'] = date('Y-m-d H:i:s');
 
@@ -1257,7 +1264,7 @@ class Controller extends BaseController
                         $specData['suid'] = '';
                         $specData['qty'] = $data['shopList'][$ii]['qty'];
                         $specData['title'] = $data['shopList'][$ii]['productTitle'];
-                        $specData['spec_title'] = $data['shopList'][$ii]['specTitleList'];
+                        $specData['spec_title'] = '';
                         $specData['price'] = $data['shopList'][$ii]['price'];
                         DbFunction::InsertDB('order_spec', $specData);
 
@@ -1278,8 +1285,8 @@ class Controller extends BaseController
 
                     Session::forget('shopCar');
                     Session::forget('shopCarMember');
-
-                    return view('home.payEnd' , $data);
+                    return redirect('/complete');//轉跳頁面
+                    exit;
 
                 }
                 else{
@@ -1301,9 +1308,32 @@ class Controller extends BaseController
                     return view('home.alert' , $data);
                 }
 
-        }
+
+    }
+
+    /**
+     * 結帳完畢
+     * @param Request $request
+     * @return mixed
+     */
+    public function complete(Request $request)
+    {
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+        //SEO資訊------------------------------------------
+        $data['webTitle'] = '購物完成 - '.$data['webData']["seo_title"];
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+        //------------------------------------------------
 
 
+        $data['uri'] ='complete';
+
+        return view('home.complete' , $data);
     }
 
 

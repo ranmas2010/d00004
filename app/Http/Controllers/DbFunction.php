@@ -165,7 +165,12 @@ class DbFunction extends Controller
 		{
 			$PK = 'id';
 		}
-		
+		if($tables == 'order_pay_data')
+		{
+			$PK = 'MerchantTradeNo';
+		}
+
+
 		$valData[] = $id;
 
 		$updateSQL = "update ".$tables." set " . $val. " where ".$PK." = ? ";
