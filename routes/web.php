@@ -57,6 +57,8 @@ Route::get('/car', 'Controller@car');
 Route::get('/checkout', 'Controller@checkout');
 Route::get('/pay', 'Controller@pay');
 Route::post('/payEnd', 'Controller@payEnd');
+Route::get('/complete', 'Controller@complete');
+Route::post('/payRe', 'Controller@payRe');
 
 //登入
 Route::get('/login', 'Controller@login');
