@@ -249,102 +249,36 @@
 
         <div class="row clearfix">
 
-            <!--Gallery Item-->
-            <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
-                <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/001.jpg" alt="">
-                        <div align="center">201701</div>
-                        <div class="overlay-box">
-                            <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/001.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+            @if(count($designer)>0)
+            @foreach ($gallery as $col)
             <!--Gallery Item-->
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/002.jpg" alt="">
-                        <div>201701</div>
+                    <div class="image-box"><img src="{!! $col['pic'] !!}" alt="">
+                        <div align="center">{{$col['title']}}</div>
                         <div class="overlay-box">
                             <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!--Gallery Item-->
-            <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
-                <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/003.jpg" alt="">
-                        <div>201701</div>
-                        <div class="overlay-box">
-                            <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/003.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!--Gallery Item-->
-            <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
-                <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/004.jpg" alt="">
-                        <div>201701</div>
-                        <div class="overlay-box">
-                            <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/004.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                @foreach ($col['picArr'] as $key => $val)
+                                    <a class="lightbox-image" href="/_upload/images/{!! $val !!}" title="{{$col['picAltArr'][$key]}}" data-fancybox-group="example-gallery{{$col['id']}}"><span class="icon flaticon-plus"></span></a>
+                                @endforeach
 
-            <!--Gallery Item-->
-            <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
-                <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/005.jpg" alt="">
-                        <div>201701</div>
-                        <div class="overlay-box">
-                            <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/005.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!--Gallery Item-->
-            <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
-                <div class="inner-box">
-                    <div class="image-box"><img src="/images/portfolio/006.jpg" alt="">
-                        <div>201701</div>
-                        <div class="overlay-box">
-                            <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/006.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
+            @endif
+
 
         </div>
 
         <div class="text-center">
-            <a href="gallery.html" class="theme-btn btn-style-one">View All</a>
+            <a href="/gallery" class="theme-btn btn-style-one">View All</a>
         </div>
 
     </div>
