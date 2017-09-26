@@ -126,7 +126,7 @@
 						</ul>
 						<!--Right Nav-->
 						<ul class="navigation right-nav clearfix">
-							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動相簿</a></li>
+							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
 							<li class="dropdown @if($uri == 'gallery') current @endif "><a href="/news">最新消息</a>
 								<ul>
 									@foreach ($newsCategorys as $col)
@@ -205,7 +205,7 @@
 									<li><a href="error-page.html">404 Page</a></li>
 								</ul>
 							</li>
-							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動相簿</a></li>
+							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
 							<li class="dropdown @if($uri == 'news') current @endif"><a href="/news">最新消息</a>
 								<ul>
 									@foreach ($newsCategorys as $col)

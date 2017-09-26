@@ -66,7 +66,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$tempData["pic"]);
                 $tempData["pic"] = '/_upload/images/'.$picArr[0];
 
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -97,7 +97,7 @@ class Controller extends BaseController
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=190&w=236';
 
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -136,7 +136,7 @@ class Controller extends BaseController
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=250&w=347';
 
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -193,6 +193,37 @@ class Controller extends BaseController
             }
 
             $data["designer"][] = $tempData;
+        }
+        //------------------------------------------------
+
+
+        //相簿------------------------------------------------
+        $sql = 'select * from gallery where status=? and lang = ? and index_view=? order by sortIndex asc Limit 0 , 6';
+        $data['gallery'] = array();
+        $getData = DB::select($sql,array('Y',$data['lang'],'Y'));
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+            if($tempData["pic"] != '')
+            {
+                $picArr = explode(',',substr($tempData["pic"],0,-1));
+                $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=265&w=372';
+
+                $picAltArr = explode('§',$tempData["pic_alt"]);
+                $tempData["pic_alt"] = '';
+                if(!empty($picAltArr[0]))
+                {
+                    $tempData["pic_alt"] = $picAltArr[0];
+                }
+                $tempData["picArr"] = $picArr;
+                $tempData["picAltArr"] = $picAltArr;
+            }
+            else
+            {
+                $tempData["pic"] = '/images/Home-Slider/slide.jpg';
+            }
+
+            $data["gallery"][] = $tempData;
         }
         //------------------------------------------------
 
@@ -278,7 +309,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$tempData["pic"]);
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=560&w=770';
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -348,7 +379,7 @@ class Controller extends BaseController
         {
             $picArr = explode(',',$data['news']["pic"]);
             $data['news']["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=560&w=770';
-            $picAltArr = explode(',',$data['news']["pic_alt"]);
+            $picAltArr = explode('§',$data['news']["pic_alt"]);
             $data['news']["pic_alt"] = '';
             if(!empty($picAltArr[0]))
             {
@@ -442,7 +473,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$data['about']["pic"]);
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $data['about']["pic"] = '/_upload/images/'.$picArr[0];
-                $picAltArr = explode(',',$data['about']["pic_alt"]);
+                $picAltArr = explode('§',$data['about']["pic_alt"]);
                 $data['about']["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -491,7 +522,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$tempData["pic"]);
                 $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=154&w=154';
 
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -547,7 +578,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$data['product_categorys']["pic"]);
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $data['product_categorys']["pic"] = '/_upload/images/'.$picArr[0];
-                $picAltArr = explode(',',$data['product_categorys']["pic_alt"]);
+                $picAltArr = explode('§',$data['product_categorys']["pic_alt"]);
                 $data['product_categorys']["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {
@@ -686,7 +717,7 @@ class Controller extends BaseController
                 $picArr = explode(',',$tempData["pic"]);
                 //$tempData["pic"] = '/_upload/images/'.$picArr[0];
                 $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=270&w=370';
-                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $picAltArr = explode('§',$tempData["pic_alt"]);
                 $tempData["pic_alt"] = '';
                 if(!empty($picAltArr[0]))
                 {

@@ -99,6 +99,14 @@ class FieldController extends Controller
 					'banner_title'  => 'text_lang,n',
 					'pic'  => 'images,n,<div style="color:#FF0000">※圖片大小為 1920 x 687</div>',
 				),
+			'gallery' =>
+				array(
+					'lang'  => 'lang,n',
+					'title'  => 'text_lang,n',
+					'pic'  => 'images,n',
+					'index_view'  => 'status,n,Y',
+					'status'  => 'status,n,Y',
+				),
 			'admin_account' =>
 				array(
 					'passwd'  => 'password,n',
