@@ -84,6 +84,13 @@ class ajaxFunction extends BaseController
 				$reSaveForm = ajaxFunction::orderSave($rowData);
 				break;
 
+			case "editMember":
+				$reSaveForm = ajaxFunction::editMember($rowData);
+				break;
+
+			case "editPassword":
+				$reSaveForm = ajaxFunction::editPassword($rowData);
+				break;
 		}
 
 		$arr = array_merge($arr,$reSaveForm);
@@ -92,6 +99,59 @@ class ajaxFunction extends BaseController
 		return $arr;
 
 	}
+
+	/**
+	 * 修改密碼
+	 * @param $rowData
+	 * @return array
+	 */
+	public static function editPassword($rowData)
+	{
+
+		$re = array('re' => 'N');
+
+
+		$getData = DB::select("select id from member where guid=? and passwd=? ", array($rowData['editID'],md5($rowData['old_password'])));
+
+
+		if(count($getData) > 0)
+		{
+			$passwordData = array('editID' => $rowData['editID'] , 'passwd' => md5($rowData['new_password']));
+			 DbFunction::UpdateDB('member' , $passwordData);
+			$re['re'] = 'Y';
+		}
+
+
+		return $re;
+
+	}
+
+
+	/**
+	 * 修改基本資料
+	 * @param $rowData
+	 * @return array
+	 */
+	public static function editMember($rowData)
+	{
+
+		$re = array('re' => 'N');
+
+		$re['re'] = DbFunction::UpdateDB('member' , $rowData);
+
+		//重新讀取
+
+			Session::forget('memberData');
+			$getData = DB::select("select * from member where guid=? ", array($rowData['editID']));
+			session(['memberData' => $getData[0]]);//紀錄session
+
+
+
+		return $re;
+
+	}
+
+
 
 	/**
 	 * 儲存購物者
@@ -454,6 +514,8 @@ class ajaxFunction extends BaseController
 			$rowData["passwd"] = md5($rowData["passwd"]);
 			$rowData["date"] = date('Y-m-d H:i:s');
 			$rowData["mail_key"] = base64_encode($rowData["username"] .'_'. $rowData["date"]);
+
+			$rowData["guid"] = httpFunction::getGUID();
 
 			$reData = DbFunction::InsertDB('member', $rowData);
 

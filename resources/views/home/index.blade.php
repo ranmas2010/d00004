@@ -202,108 +202,33 @@
 
         <div class="three-item-carousel owl-carousel owl-theme">
 
+            @if(count($designer)>0)
+
+            @foreach ($designer as $col)
             <!--Teacher Block-->
             <div class="teacher-block">
                 <div class="inner-box">
                     <div class="image-box">
-                        <img src="/images/teacher/MOZIteacher-1.png" alt="" />
+                        <img src="{!!  $col['pic'] !!}g" alt="{{$col['pic_alt']}}" />
                     </div>
-                    <h3>+進</h3>
-                    <div class="designation">企劃總監</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
+                    <h3>{{$col['title']}}</h3>
+                    <div class="designation">{{$col['subject']}}</div>
+                    <div class="text">{!! $col['notes'] !!}</div>
                     <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
+                        @if(!empty($col['facebook']))
+                        <li><a href="{{$col['facebook']}}" target="_blank"><span class="fa fa-facebook-square"></span></a></li>
+                        @endif
+                        @if(!empty($col['twitter']))
+                        <li><a href="{{$col['twitter']}}" target="_blank"><span class="fa fa-twitter-square"></span></a></li>
+                            @endif
+                         @if(!empty($col['instagram']))
+                        <li><a href="{{$col['instagram']}}" target="_blank"><span class="fa fa-instagram"></span></a></li>
+                            @endif
                     </ul>
                 </div>
             </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/teacher/MOZIteacher-2.png" alt="" />
-                    </div>
-                    <h3>羊叔</h3>
-                    <div class="designation">設計總監</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/teacher/p7403741a556455019.jpg" alt="" />
-                    </div>
-                    <h3>川普</h3>
-                    <div class="designation">美國總統</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-1.jpg" alt="" />
-                    </div>
-                    <h3>STEVEN SMITH</h3>
-                    <div class="designation">Sports Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-2.jpg" alt="" />
-                    </div>
-                    <h3>David warner</h3>
-                    <div class="designation">Drawing Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-3.jpg" alt="" />
-                    </div>
-                    <h3>Steve alia</h3>
-                    <div class="designation">Language Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
+            @endforeach
+        @endif
         </div>
     </div>
     <!--Background Patten-->
@@ -328,9 +253,14 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/001.jpg" alt="">
+                        <div align="center">201701</div>
                         <div class="overlay-box">
                             <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/001.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/001.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery1"><span class="icon flaticon-plus"></span></a>
                             </div>
                         </div>
                     </div>
@@ -341,9 +271,14 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/002.jpg" alt="">
+                        <div>201701</div>
                         <div class="overlay-box">
                             <div class="content">
-                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
+                                <a class="lightbox-image" href="/images/portfolio/002.jpg" title="Image Title Here" data-fancybox-group="example-gallery2"><span class="icon flaticon-plus"></span></a>
                             </div>
                         </div>
                     </div>
@@ -354,6 +289,7 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/003.jpg" alt="">
+                        <div>201701</div>
                         <div class="overlay-box">
                             <div class="content">
                                 <a class="lightbox-image" href="/images/portfolio/003.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
@@ -367,6 +303,7 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/004.jpg" alt="">
+                        <div>201701</div>
                         <div class="overlay-box">
                             <div class="content">
                                 <a class="lightbox-image" href="/images/portfolio/004.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
@@ -380,6 +317,7 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/005.jpg" alt="">
+                        <div>201701</div>
                         <div class="overlay-box">
                             <div class="content">
                                 <a class="lightbox-image" href="/images/portfolio/005.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
@@ -393,6 +331,7 @@
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
                 <div class="inner-box">
                     <div class="image-box"><img src="/images/portfolio/006.jpg" alt="">
+                        <div>201701</div>
                         <div class="overlay-box">
                             <div class="content">
                                 <a class="lightbox-image" href="/images/portfolio/006.jpg" title="Image Title Here" data-fancybox-group="example-gallery"><span class="icon flaticon-plus"></span></a>
@@ -411,115 +350,6 @@
     </div>
 </section>
 <!--End Gallery Section-->
-
-<!--Testimonial Section-->
-<section class="testimonial-section" style="background-image:url(images/background/pattern-1.png);">
-    <div class="auto-container">
-
-        <!--Client Testimonial Carousel-->
-        <div class="client-testimonial-carousel owl-carousel owl-theme">
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-            <!--Testimonial Block Two-->
-            <div class="testimonial-block-two">
-                <div class="inner-box">
-                    <div class="quote-icon"><span class="icon flaticon-left-quote"></span></div>
-                    <div class="text">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...architecto beatae vitae...Sed ut perspiciatis, unde  voluptatem...</div>
-                </div>
-            </div>
-
-        </div>
-
-        <!--Product Thumbs Carousel-->
-        <div class="client-thumb-outer">
-            <div class="client-thumbs-carousel owl-carousel owl-theme">
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-1.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-2.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-3.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-1.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-2.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-                <div class="thumb-item">
-                    <figure class="thumb-box"><img src="/images/resource/author-3.jpg" alt=""></figure>
-                    <div class="thumb-content">
-                        <h3>Kristen stewart</h3>
-                        <div class="designation">Parents</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section>
-<!--End Testimonial Section-->
 
 <!--Blog Section-->
 <section class="blog-section">

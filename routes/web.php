@@ -67,10 +67,13 @@ Route::get('/login', 'Controller@login');
 Route::get('/contact', 'Controller@contact');
 
 //會員專區
-Route::get('/member', 'Controller@member');
+Route::get('/my-account', 'Controller@myAccount');
 
-
-//會員專區
+//修改基本資料
+Route::get('/my-profile', 'Controller@myProfile');
+//修改密碼
+Route::get('/my-password', 'Controller@myPassword');
+//會員登出
 Route::get('/logout', 'Controller@logout');
 
 //==========================================================================================================
