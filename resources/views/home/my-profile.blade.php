@@ -7,10 +7,11 @@
 <section class="page-title" style="background-image:url(images/background/5.jpg);">
     <div class="auto-container">
         <div class="inner-box">
-            <h1>加入會員</h1>
+            <h1>修改基本資料</h1>
             <ul class="bread-crumb">
                 <li><a href="/">Home</a></li>
-                <li>加入會員</li>
+                <li><a href="/my-account">會員專區</a></li>
+                <li>修改基本資料</li>
             </ul>
         </div>
     </div>
@@ -29,34 +30,24 @@
                     <!-- contact Form -->
                     <div class="contact-form">
                         <!--contact Form-->
-                        <form method="post" action="" id="regiterFrom" name="regiterFrom">
+                        <form method="post" action="" id="profileFrom" name="profileFrom">
+                            <input type="hidden" name="editID"  value="{{$memberData->guid}}">
 
                             <div class="form-group">
-                                <input type="email" name="username" id="username" placeholder="帳號 *" required>
+                                <input type="text" name="name" required placeholder="姓名 *" value="{{$memberData->name}}">
                                 <div class="_formErrorMsg"></div>
                             </div>
                             <div class="form-group">
-                                <input type="password" name="passwd" id="passwd" placeholder="密碼 *" required>
+                                <input type="text" name="company" placeholder="公司名稱" value="{{$memberData->company}}">
                                 <div class="_formErrorMsg"></div>
                             </div>
                             <div class="form-group">
-                                <input type="password" name="ckPasswd" id="ckPasswd" placeholder="密碼確認 *" required>
+                                <input type="text" name="phone" placeholder="市話" value="{{$memberData->phone}}">
                                 <div class="_formErrorMsg"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="name" required placeholder="姓名 *">
-                                <div class="_formErrorMsg"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="company" placeholder="公司名稱">
-                                <div class="_formErrorMsg"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="phone" placeholder="市話">
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="mobile" placeholder="行動電話 *" required>
+                                <input type="text" name="mobile" placeholder="行動電話 *" required value="{{$memberData->mobile}}">
                                 <div class="_formErrorMsg"></div>
                             </div>
 
@@ -66,7 +57,7 @@
                                     <option value="">縣市 *</option>
 
                                     @foreach ($city as $col)
-                                        <option value="{{$col->city}}">{{$col->city}}</option>
+                                        <option value="{{$col->city}}" @if($memberData->city == $col->city) selected @endif>{{$col->city}}</option>
                                     @endforeach
                                 </select>
                                 <div class="_formErrorMsg"></div>
@@ -77,31 +68,30 @@
                                 <select class="changeCityData" data-next=""  data-zip="zip" data-type="district"  name="district" id="district" required>
                                     <option value="">區域 *</option>
 
+                                    @foreach ($district as $col)
+                                        <option value="{{$col->district}}" @if($memberData->district == $col->district) selected @endif>{{$col->district}}</option>
+                                    @endforeach
 
                                 </select>
                                 <div class="_formErrorMsg"></div>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="zip" id="zip" placeholder="郵遞區號 *" required>
+                                <input type="text" name="zip" id="zip" placeholder="郵遞區號 *" required value="{{$memberData->zip}}">
                                 <div class="_formErrorMsg"></div>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="address" placeholder="地址 *" required>
+                                <input type="text" name="address" placeholder="地址 *" required value="{{$memberData->address}}">
                                 <div class="_formErrorMsg"></div>
                             </div>
 
-                            <div class="form-group">
-                                <input type="checkbox" id="newsletter" name="newsletter" >
-                                <label for="newsletter"><span>已詳敘閱讀<a href="#" class="text-gray">網站使用條款</a></span></label>
-                            </div>
 
 
-                            {!! app('captcha')->display() !!}
+
+
                             <div class="form-group">
                                 <button class="theme-btn btn-style-one" type="submit" id="submitBut" name="submit-form">送出</button>
-                                <a href="#1" title="使用Facebook帳號登入"><img src="/timthumb.php?src=/images/facebook-sign-in.png&w=300"></a>
                             </div>
 
                         </form>
@@ -109,19 +99,7 @@
                     </div>
                     <!--End Contact Form -->
                 </div>
-                <!--Time Column-->
-                <div class="time-column col-md-4 col-sm-12 col-xs-12">
-                    <div class="inner-box">
-                        <h3>註冊說明</h3>
 
-                                <div class="day-box">
-                                    ※請使用E-mail做為您的帳號<br><br>
-                                    ※註冊後必須至您註冊的Email中啟用您的帳號，才能登入喔<br><br>
-                                    ※(*)為必填項目，請正確填入，以免影響會員權益<br><br>
-                                </div>
-
-                    </div>
-                </div>
             </div>
         </div>
 

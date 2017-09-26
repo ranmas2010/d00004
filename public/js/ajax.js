@@ -622,6 +622,100 @@ $(document).ready(function () {
 	});
 
 
+	/**
+	 * 修改密碼
+	 */
+	$("#pwdFrom").each(function(){
+
+		var passwordReq = true;
+
+		$("#pwdFrom").validate({
+			rules: {
+				new_password: {
+					required: passwordReq,
+					minlength: 6,
+					maxlength: 14,
+				},
+				chk_password: {
+					required: passwordReq,
+					minlength: 6,
+					maxlength: 14,
+					equalTo: "#new_password",
+				},
+			},
+			submitHandler: function(form) {
+
+
+				$('.submitBut').attr("disabled",true);
+
+				var valsTemp = $("#pwdFrom").serializeArray();
+
+				var vals = JSON.stringify(valsTemp);
+				setLoadPlayer("");
+				//console.log(vals);
+				useAjax('editPassword' ,vals );
+
+				return false;
+			},
+			errorPlacement: function(error, element) {
+				element.attr('style', 'border:#FF0000 1px solid;');
+
+				element.next("._formErrorMsg").html('<div style="color: #FF0000; padding-bottom: 10px; padding-left: 10px;">' + error.text() + '</div>');
+
+
+			},
+			success: function (error) {
+				var findID = $('#' + error[0].htmlFor);
+				$(findID).attr('style', '');
+				findID.prev(".formNotice").html('');
+				return false;
+
+			}
+		});
+
+	});
+
+
+	/**
+	 * 修改基本資料
+	 */
+	$("#profileFrom").each(function(){
+
+
+		$("#profileFrom").validate({
+
+			submitHandler: function(form) {
+
+
+				$('.submitBut').attr("disabled",true);
+
+				var valsTemp = $("#profileFrom").serializeArray();
+
+				var vals = JSON.stringify(valsTemp);
+				setLoadPlayer("");
+				//console.log(vals);
+				useAjax('editMember' ,vals );
+
+				return false;
+			},
+			errorPlacement: function(error, element) {
+				element.attr('style', 'border:#FF0000 1px solid;');
+
+				element.next("._formErrorMsg").html('<div style="color: #FF0000; padding-bottom: 10px; padding-left: 10px;">' + error.text() + '</div>');
+
+
+			},
+			success: function (error) {
+				var findID = $('#' + error[0].htmlFor);
+				$(findID).attr('style', '');
+				findID.prev(".formNotice").html('');
+				return false;
+
+			}
+		});
+
+	});
+
 
 	/**
 	 * 聯絡表單驗證
@@ -1304,6 +1398,56 @@ function useAjax(ACT , needVal){
 
 			switch(json.Func)
 			{
+				//修改密碼
+				case "editPassword":
+
+					if(json.re == 'Y')
+					{
+						swal({
+								title: "系統資訊",
+								text: "您的密碼已修改完成，請下次登入時使用新密碼!",
+								type: "success",
+								showCancelButton: true,
+								confirmButtonColor: "#DD6B55",
+								confirmButtonText: "確定!",
+								closeOnConfirm: false,
+								cancelButtonText: "取消",
+							},
+							function(){
+								window.location.href= '/my-account';
+							});
+					}
+					else
+					{
+						setLoadPlayer("none");
+						$('.submitBut').attr("disabled",false);
+						$('#old_password').val('');
+						swal("系統資訊", "您的舊密碼比對錯誤，請重新輸入!", "error");
+
+						return false;
+
+					}
+
+					break;
+				//修改基本資料
+				case "editMember":
+
+
+					swal({
+							title: "系統資訊",
+							text: "您的基本資料已修改完畢!",
+							type: "success",
+							showCancelButton: true,
+							confirmButtonColor: "#DD6B55",
+							confirmButtonText: "確定!",
+							closeOnConfirm: false,
+							cancelButtonText: "取消",
+						},
+						function(){
+							window.location.href= '/my-account';
+						});
+
+					break;
 
 				//購物商品在判斷
 				case "orderSave":
@@ -1472,6 +1616,7 @@ function useAjax(ACT , needVal){
 					{
 						setLoadPlayer("none");
 						$('.submitBut').attr("disabled",false);
+
 						swal("登入失敗!", "請檢查您的帳號或密碼是否輸入錯誤!", "error");
 						return;
 					}

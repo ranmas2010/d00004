@@ -167,8 +167,34 @@ class Controller extends BaseController
         $data['seoKeywords'] = $data['webData']["seo_keywords"];
         //------------------------------------------------
 
+        //設計團隊------------------------------------------------
+        $sql = 'select * from designer where status=? and lang = ? order by sortIndex asc';
+        $data['designer'] = array();
+        $getData = DB::select($sql,array('Y',$data['lang']));
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+            if($tempData["pic"] != '')
+            {
+                $picArr = explode(',',$tempData["pic"]);
+                $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=154&w=154';
 
+                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $tempData["pic_alt"] = '';
+                if(!empty($picAltArr[0]))
+                {
+                    $tempData["pic_alt"] = $picAltArr[0];
+                }
 
+            }
+            else
+            {
+                $tempData["pic"] = '/images/Home-Slider/slide.jpg';
+            }
+
+            $data["designer"][] = $tempData;
+        }
+        //------------------------------------------------
 
         $data['uri'] = 'index';
         return view('home.index' , $data);
@@ -452,6 +478,36 @@ class Controller extends BaseController
         $data['shopTotalPrice'] = $shopData["totalPrice"];
         $data['shopTotalQty'] = $shopData["totalQty"];
         //取購物車資訊 END-----------------------------------------
+
+        //設計團隊------------------------------------------------
+        $sql = 'select * from designer where status=? and lang = ? order by sortIndex asc';
+        $data['designer'] = array();
+        $getData = DB::select($sql,array('Y',$data['lang']));
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+            if($tempData["pic"] != '')
+            {
+                $picArr = explode(',',$tempData["pic"]);
+                $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=154&w=154';
+
+                $picAltArr = explode(',',$tempData["pic_alt"]);
+                $tempData["pic_alt"] = '';
+                if(!empty($picAltArr[0]))
+                {
+                    $tempData["pic_alt"] = $picAltArr[0];
+                }
+
+            }
+            else
+            {
+                $tempData["pic"] = '/images/Home-Slider/slide.jpg';
+            }
+
+            $data["designer"][] = $tempData;
+        }
+        //------------------------------------------------
+
         $data['uri'] = 'about';
         return view('home.about' , $data);
     }
@@ -524,13 +580,13 @@ class Controller extends BaseController
         $sql = 'select guid,title,notes,category,pic,pic_alt,price,(select title from product_categorys where guid = product.category ) as categoryTitle from product where status=? and lang = ?  ';
 
         //第一層
-        if(!empty($category) && $category != null )
+        if(!empty($data['category']) && $data['category'] != null )
         {
 
 
             //取得分類名稱
             $sql2 = 'select title,seo_title,seo_keywords,seo_description from product_categorys where guid=? and lang = ? ';
-            $getData2 = DB::select($sql2,array($category,$data['lang']));
+            $getData2 = DB::select($sql2,array($data['category'],$data['lang']));
 
             $categoryTitle = $getData2[0]->title;
             $data['categoryTitle'] = $categoryTitle;
@@ -539,11 +595,11 @@ class Controller extends BaseController
             $seo_description = $getData2[0]->seo_description;
 
 
-            if(empty($subCategory))
+            if(empty($data['subCategory']))
             {
                 //取得所有下層
                 $sql2 = 'select guid from product_categorys where category=? and lang = ? ';
-                $getData2 = DB::select($sql2,array($category,$data['lang']));
+                $getData2 = DB::select($sql2,array($data['category'],$data['lang']));
 
                 $incategorys = '';
                 if(count($getData2) > 0)
@@ -562,26 +618,26 @@ class Controller extends BaseController
                 else
                 {
 
-                    $sql .= " and category = '" .$category."'";
+                    $sql .= " and category = '" .$data['category']."'";
                 }
 
             }
 
 
-            $addPath = '/'.$category;
+            $addPath = '/'.$data['category'];
 
         }
         //第二層
-        if(!empty($subCategory) && $subCategory != null)
+        if(!empty($data['subCategory']) && $data['subCategory'] != null)
         {
-            $data['subCategory'] = $subCategory;
+            $data['subCategory'] = $data['subCategory'];
 
             $sql .= ' and category = ?';
-            $searchVal[] = $subCategory;
+            $searchVal[] = $data['subCategory'];
 
             //取得分類名稱
             $sql2 = 'select title,seo_title,seo_keywords,seo_description from product_categorys where guid=? and lang = ? ';
-            $getData2 = DB::select($sql2,array($subCategory,$data['lang']));
+            $getData2 = DB::select($sql2,array($data['subCategory'],$data['lang']));
 
             $categoryTitle2 = $getData2[0]->title;
 
@@ -591,7 +647,7 @@ class Controller extends BaseController
             $seo_description = $getData2[0]->seo_description;
 
 
-            $addPath .= '/'.$subCategory;
+            $addPath .= '/'.$data['subCategory'];
 
         }
 
@@ -756,7 +812,10 @@ class Controller extends BaseController
         $getData = DB::select($sql,array($data['topCategory']['guid'] , $data['lang'] ));
         $data['subCategory'] = $getData;
 
-
+        //取相關作品
+        $sql = 'select guid,title from product where category=? and lang=? and guid != '.$data['product']['guid'];
+        $getData = DB::select($sql,array( $data['product']['category'],$data['lang'] ));
+        $data['subProduct'] = $getData;
 
 
         //SEO資訊------------------------------------------
@@ -1022,7 +1081,6 @@ class Controller extends BaseController
      */
     public function checkout(Request $request)
     {
-
         $data = array();
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
@@ -1161,11 +1219,11 @@ class Controller extends BaseController
 
 
         $payData = array();
-        $payData['or_no'] = 'A'.date('ymdHis');
+        $payData['or_no'] = 'A'.date('ymdHis').httpFunction::randCode();
 
                 $payData['bank'] = 'ecpay';//綠界
                 $payData['MerchantID'] = '2000132';
-                $payData['MerchantTradeNo'] = '2000132';
+                //$payData['MerchantTradeNo'] = '2000132';
                 $payData['HashKey'] = '5294y06JbISpM5x9';
                 $payData['HashIV'] = 'v77hoKGq4kWxNNIS';
                 $payData['ServiceURL'] ='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
@@ -1213,8 +1271,7 @@ class Controller extends BaseController
                 $fareData  = httpFunction::fareCalculation($data['shopTotalPriceAndFare']);//運費計算
 
 
-                //寫入購物資訊
-                DbFunction::InsertDB('order_pay_data', $rePayData);
+
                 $shopCarMember['status'] = 'N';
 
                 $canAddOrder = 'N';
@@ -1234,6 +1291,11 @@ class Controller extends BaseController
                 //金流成功
                 if($canAddOrder == 'Y')
                 {
+
+
+                    //寫入購物資訊
+                    DbFunction::InsertDB('order_pay_data', $rePayData);
+
                     //寫入購物車
                     $shopCarMember = session('shopCarMember');
                     $shopCarMember['or_no'] = $rePayData['MerchantTradeNo'];
@@ -1296,6 +1358,7 @@ class Controller extends BaseController
                     $data['altTitle'] = '交易失敗';
                     $data['type'] = 'error';
                     $data['confirmButtonText'] = '確定';
+                    $data['url'] = 'checkout';
                     if($rePayData['PaymentType'] == 'Credit_CreditCard')
                     {
                         $data['altSubTitle'] = '請檢查您的卡號或其他資訊是否輸入正確!';
@@ -1394,7 +1457,7 @@ class Controller extends BaseController
         $data['shopTotalPrice'] = $shopData["totalPrice"];
         $data['shopTotalQty'] = $shopData["totalQty"];
         //取購物車資訊 END-----------------------------------------
-        $data['uri'] = Route::getFacadeRoot()->current()->uri();
+        $data['uri'] = 'contact';
 
         return view('home.contact' , $data);
 
@@ -1405,7 +1468,7 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    public function member(Request $request)
+    public function myAccount(Request $request)
     {
 
         //判斷登入
@@ -1437,11 +1500,122 @@ class Controller extends BaseController
         $data['shopTotalQty'] = $shopData["totalQty"];
         //取購物車資訊 END-----------------------------------------
 
-        $data['uri'] = 'member';
+        $data['uri'] = 'my-account';
 
-        return view('home.member' , $data);
+        return view('home.my-account' , $data);
 
     }
+
+
+    /**
+     * 修改基本資料
+     * @param Request $request
+     * @return mixed
+     */
+    public function myProfile(Request $request)
+    {
+
+        //判斷登入
+        if(!Session::has('memberData'))
+        {
+
+            return redirect('/login');//轉跳頁面
+            exit;
+        }
+
+
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+
+        $data['memberData'] = session('memberData');
+
+        //SEO資訊------------------------------------------
+        $data['webTitle'] = '修改基本資料 - '.$data['webData']["seo_title"];
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+        //------------------------------------------------
+        //取購物車資訊---------------------------------------------
+        $shopData = httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
+        //取購物車資訊 END-----------------------------------------
+
+        //取得縣市
+        $sql = 'select city from taiwan_city group by city order by zip asc';
+        $getData = DB::select($sql,array() );
+        $data['city'] = array();
+        if(count($getData) > 0)
+        {
+            $data['city'] = $getData;
+        }
+
+
+
+            //取得區域
+            $sql = 'select district from taiwan_city where city=? order by zip asc';
+            $getData = DB::select($sql,array( $data['memberData']->city) );
+            $data['district'] = array();
+            if(count($getData) > 0)
+            {
+                $data['district'] = $getData;
+            }
+
+        $data['uri'] = 'my-profile';
+
+        return view('home.my-profile' , $data);
+
+    }
+
+
+
+    /**
+     * 修改密碼
+     * @param Request $request
+     * @return mixed
+     */
+    public function myPassword(Request $request)
+    {
+
+        //判斷登入
+        if(!Session::has('memberData'))
+        {
+
+            return redirect('/login');//轉跳頁面
+            exit;
+        }
+
+
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+
+        $data['memberData'] = session('memberData');
+
+        //SEO資訊------------------------------------------
+        $data['webTitle'] = '修改密碼 - '.$data['webData']["seo_title"];
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+        //------------------------------------------------
+        //取購物車資訊---------------------------------------------
+        $shopData = httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
+        //取購物車資訊 END-----------------------------------------
+
+        $data['uri'] = 'my-password';
+        return view('home.my-password' , $data);
+
+    }
+
 
     /**
      * 登出

@@ -34,10 +34,19 @@
 								<div class="widget-content">
 									<div class="text">享受最純粹『玩』的本質，以人與人的互動，啓動桌遊的魔幻空間。你今天！桌遊了沒</div>
 									<ul class="social-links-two">
-										<li class="facebook"><a href="#"><span class="fa fa-facebook"></span></a></li>
-										<li class="twitter"><a href="#"><span class="fa fa-twitter"></span></a></li>
-										<li class="google-plus"><a href="#"><span class="fa fa-google-plus"></span></a></li>
-										<li class="linkedin"><a href="#"><span class="fa fa-linkedin"></span></a></li>
+										@if(!empty($webData['facebook']))
+										<li class="facebook"><a href="{{$webData['facebook']}}" target="_blank"><span class="fa fa-facebook"></span></a></li>
+											@endif
+										@if(!empty($webData['twitter']))
+										<li class="twitter"><a href="{{$webData['twitter']}}" target="_blank"><span class="fa fa-twitter"></span></a></li>
+											@endif
+										@if(!empty($webData['google_plus']))
+										<li class="google-plus"><a href="{{$webData['google_plus']}}" target="_blank"><span class="fa fa-google-plus"></span></a></li>
+											@endif
+										@if(!empty($webData['instagram']))
+										<li class="linkedin"><a href="{{$webData['instagram']}}" target="_blank"><span class="fa fa-instagram"></span></a></li>
+											@endif
+
 									</ul>
 								</div>
 							</div>
@@ -95,7 +104,7 @@
 								</div>
 								<div class="widget-content">
 									<div class="newsletter-form">
-										<form method="post" action="contact.html">
+										<form method="post" action="">
 											<div class="form-group">
 												<input type="text" name="name" value="" placeholder="Name *" required="">
 											</div>

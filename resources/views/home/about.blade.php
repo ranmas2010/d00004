@@ -49,107 +49,33 @@
 
         <div class="three-item-carousel owl-carousel owl-theme">
 
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/teacher/MOZIteacher-1.png" alt="" />
-                    </div>
-                    <h3>+進</h3>
-                    <div class="designation">企劃總監</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
+            @if(count($designer)>0)
 
-            <!--Teacher Block-->
+            @foreach ($designer as $col)
+                    <!--Teacher Block-->
             <div class="teacher-block">
                 <div class="inner-box">
                     <div class="image-box">
-                        <img src="/images/teacher/MOZIteacher-2.png" alt="" />
+                        <img src="{!!  $col['pic'] !!}g" alt="{{$col['pic_alt']}}" />
                     </div>
-                    <h3>羊叔</h3>
-                    <div class="designation">設計總監</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
+                    <h3>{{$col['title']}}</h3>
+                    <div class="designation">{{$col['subject']}}</div>
+                    <div class="text">{!! $col['notes'] !!}</div>
                     <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
+                        @if(!empty($col['facebook']))
+                            <li><a href="{{$col['facebook']}}" target="_blank"><span class="fa fa-facebook-square"></span></a></li>
+                        @endif
+                        @if(!empty($col['twitter']))
+                            <li><a href="{{$col['twitter']}}" target="_blank"><span class="fa fa-twitter-square"></span></a></li>
+                        @endif
+                        @if(!empty($col['instagram']))
+                            <li><a href="{{$col['instagram']}}" target="_blank"><span class="fa fa-instagram"></span></a></li>
+                        @endif
                     </ul>
                 </div>
             </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/teacher/p7403741a556455019.jpg" alt="" />
-                    </div>
-                    <h3>川普</h3>
-                    <div class="designation">美國總統</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-1.jpg" alt="" />
-                    </div>
-                    <h3>STEVEN SMITH</h3>
-                    <div class="designation">Sports Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-2.jpg" alt="" />
-                    </div>
-                    <h3>David warner</h3>
-                    <div class="designation">Drawing Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!--Teacher Block-->
-            <div class="teacher-block">
-                <div class="inner-box">
-                    <div class="image-box">
-                        <img src="/images/resource/teacher-3.jpg" alt="" />
-                    </div>
-                    <h3>Steve alia</h3>
-                    <div class="designation">Language Teacher</div>
-                    <div class="text">The ship set ground on the shore of this uncharted a desert isle with that this group would s form a family.</div>
-                    <ul class="social-links-one">
-                        <li><a href="#"><span class="fa fa-facebook-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-twitter-square"></span></a></li>
-                        <li><a href="#"><span class="fa fa-linkedin-square"></span></a></li>
-                    </ul>
-                </div>
-            </div>
+            @endforeach
+            @endif
 
         </div>
     </div>

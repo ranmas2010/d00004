@@ -23,12 +23,14 @@
 					</li>
 					@if(Session::has('memberData'))
 						<li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a></li>
+						<li><a href="/my-account"><i class="fa fa-user" aria-hidden="true"></i> 會員專區</a></li>
 						@else
 						<li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> 登入</a></li>
+						<li><a href="/register"><i class="fa fa-user-plus" aria-hidden="true"></i> 加入會員</a></li>
 						@endif
 
 
-					<li><a href="/register"><i class="fa fa-user-plus" aria-hidden="true"></i> 加入會員</a></li>
+
 					<li><a href="#1" class="cart-icon"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i> 購物車<span class="shopCarCount">{{count($shopList)}}</span></a>
 
 						<div class="mini-cart-brief" id="topCarArea" 	@if(count($shopList) == 0) style="display: none;" @endif>
@@ -212,7 +214,7 @@
 								</ul>
 							</li>
 							<li><a href="/contact">聯絡我們</a></li>
-							<li><a href="/member">會員專區</a></li>
+							<li><a href="/my-account">會員專區</a></li>
 							<li><a href="/car" class="cart-icon">購物車<span class="shopCarCount">{{count($shopList)}}</span></a></li>
 						</ul>
 					</div>

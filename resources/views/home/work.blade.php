@@ -159,19 +159,24 @@
 
 
                     <!--Services Tags Widget-->
+                    @if(count($subProduct)>0)
                     <div class="sidebar-widget popular-tags">
                         <div class="sidebar-title">
                             <h3>相關作品</h3>
                         </div>
-                        <a href="#">Music</a>
-                        <a href="#">Toys</a>
-                        <a href="#">Sports</a>
-                        <a href="#">Childwood</a>
-                        <a href="#">Education</a>
-                        <a href="#">Nutritions</a>
-                        <a href="#">Link</a>
+                        @foreach ($subProduct as $col)
+                        <a href="/work/{{$col->guid}}" title="{{$col->title}}">{{$col->title}}</a>
+                        @endforeach
                     </div>
+                    @endif
+                        <!--內頁廣告-->
+                    <div class="sidebar-widget">
+                        <ul>
+                            <li><img src="/_upload/images/1707261515400.jpg"></li>
+                            <li><img src="/_upload/images/1707261515400.jpg"></li>
+                        </ul>
 
+                    </div>
                 </aside>
             </div>
 

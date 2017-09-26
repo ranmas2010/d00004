@@ -1582,4 +1582,29 @@ class httpFunction extends Controller
 		return $contents;
 	}
 
+	/**
+	 * 取亂數
+	 * @return string
+	 */
+	public static function randCode()
+	{
+		// 設定亂數種子
+		mt_srand((double)microtime()*1000000);
+		// 驗證碼變數
+				$verification = '';
+
+		// 定義顯示在圖片上的文字，可以再加上大寫字母
+				$str = '0123456789';
+
+				$l = strlen($str); //取得字串長度
+
+		//隨機取出 6 個字
+				for($i=0; $i<1; $i++){
+					$num=rand(0,$l-1);
+					$verification.= $str[$num];
+				}
+
+		return $verification;
+	}
+
 }

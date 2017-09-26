@@ -112,12 +112,13 @@ class FieldController extends Controller
 					'address'  => 'text_lang,n',
 					'email'  => 'text,n',
 					'get_email'  => 'text,n,<div style="color:#FF0000">※多mail請使用(&#44;)逗號隔開</div>',
+					'facebook'  => 'text,f',
+					'twitter'  => 'text,f',
+					'google_plus'  => 'text,f',
+					'instagram'  => 'text,f',
 					'seo_title'  => 'text_lang,n',
 					'seo_keywords'  => 'textarea_lang,f',
 					'seo_description'  => 'textarea_lang,f',
-					'footer_info'  => 'ckeditor_lang,f',
-					'contact_info'  => 'ckeditor_lang,f',
-					'pic'  => 'images,n',
 					'ga_code'  => 'text,f',
 				),
 
@@ -154,6 +155,18 @@ class FieldController extends Controller
 					'seo_title'  => 'text_lang,n',
 					'seo_keywords'  => 'textarea_lang,f',
 					'seo_description'  => 'textarea_lang,f',
+				),
+			'designer' =>
+				array(
+					'lang'  => 'lang,n',
+					'title'  => 'text_lang,n',
+					'subject'  => 'text_lang,n',
+					'notes' => 'textarea_lang,f',
+					'pic'  => 'images,n',
+					'facebook'  => 'text,f',
+					'twitter'  => 'text,f',
+					'instagram'  => 'text,f',
+					'status'  => 'status,n,Y',
 				),
 			'catalog' =>
 				array(
