@@ -894,20 +894,66 @@ class Controller extends BaseController
         $data['newsCategorys'] = $this->news_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
-
-        $sql = 'select * from about where  lang = ?';
-        $getData = DB::select($sql,array($data['lang']));
-        $data['about'] = array('title' => '','description' => '');
-        $data['aboutPic']  = array();
-        if(count($getData) > 0)
+        $addPath = '';
+        $page = 1;
+        //分頁開始與結束
+        if(isset($request->page) && !empty($request->page))
         {
-            $data['about'] = (array)$getData[0];
+            $page = $request->page;
         }
+        $needNum = 6;
+        $startNum = ($page - 1) * $needNum;
+
+
+        $searchVal = array('Y',$data['lang']);
+
+
+        //相簿------------------------------------------------
+        $sql = 'select * from gallery where status=? and lang = ?   ';
+
+        $getDataTemp = DB::select($sql,$searchVal);//取得總數
+
+        $sql .= ' order by sortIndex asc  Limit '.$startNum.','.$needNum;
+
+        $getData = DB::select($sql,array('Y',$data['lang']));
+
+
+        $data['totalNum'] = count($getDataTemp);
+        $pageList = httpFunction::pageList($page , $needNum , count($getDataTemp) , '/gallery' , $addPath);//取得頁碼顯示
+
+        $data['pageList'] = $pageList['PageList'];
+        $data['gallery'] = array();
+
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+            if($tempData["pic"] != '')
+            {
+                $picArr = explode(',',substr($tempData["pic"],0,-1));
+                $tempData["pic"] = '/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=265&w=372';
+
+                $picAltArr = explode('§',$tempData["pic_alt"]);
+                $tempData["pic_alt"] = '';
+                if(!empty($picAltArr[0]))
+                {
+                    $tempData["pic_alt"] = $picAltArr[0];
+                }
+                $tempData["picArr"] = $picArr;
+                $tempData["picAltArr"] = $picAltArr;
+            }
+            else
+            {
+                $tempData["pic"] = '/images/Home-Slider/slide.jpg';
+            }
+
+            $data["gallery"][] = $tempData;
+        }
+        //------------------------------------------------
 
 
 
         //SEO資訊-----------------------------------------
-        $data['webTitle'] =  '活動相簿 - ' . $data['webData']["seo_title"];
+        $data['webTitle'] =  '活動寫真 - ' . $data['webData']["seo_title"];
         $data['seoDescription'] = $data['webData']["seo_description"];
         $data['seoKeywords'] = $data['webData']["seo_keywords"];
 
@@ -1644,6 +1690,51 @@ class Controller extends BaseController
 
         $data['uri'] = 'my-password';
         return view('home.my-password' , $data);
+
+    }
+
+
+
+    /**
+     * 我的訂單
+     * @param Request $request
+     * @return mixed
+     */
+    public function myOrder(Request $request)
+    {
+
+        //判斷登入
+        if(!Session::has('memberData'))
+        {
+
+            return redirect('/login');//轉跳頁面
+            exit;
+        }
+
+
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+
+        $data['memberData'] = session('memberData');
+
+        //SEO資訊------------------------------------------
+        $data['webTitle'] = '我的訂單 - '.$data['webData']["seo_title"];
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+        //------------------------------------------------
+        //取購物車資訊---------------------------------------------
+        $shopData = httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
+        //取購物車資訊 END-----------------------------------------
+
+        $data['uri'] = 'my-order';
+        return view('home.my-order' , $data);
 
     }
 

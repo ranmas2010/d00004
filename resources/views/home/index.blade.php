@@ -250,7 +250,7 @@
         <div class="row clearfix">
 
 
-            @if(count($designer)>0)
+            @if(count($gallery)>0)
             @foreach ($gallery as $col)
             <!--Gallery Item-->
             <div class="gallery-item col-md-4 col-sm-6 col-xs-12">
