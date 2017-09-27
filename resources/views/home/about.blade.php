@@ -18,7 +18,7 @@
 <!--End Page Title-->
 
 <!--Welcome Section-->
-<section class="welcome-section">
+<section class="welcome-section no-padding-btm">
     <div class="auto-container">
         <!--Sec Title-->
         <div class="sec-title centered">
@@ -37,7 +37,7 @@
 <!--End Welcome Section-->
 
 <!--Teachers Section-->
-<section class="teachers-section no-padding-btm">
+<section class="teachers-section ">
     <div class="auto-container">
         <!--Sec Title-->
         <div class="sec-title centered">

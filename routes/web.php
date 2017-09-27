@@ -71,8 +71,13 @@ Route::get('/my-account', 'Controller@myAccount');
 
 //修改基本資料
 Route::get('/my-profile', 'Controller@myProfile');
+
 //修改密碼
 Route::get('/my-password', 'Controller@myPassword');
+
+//我的訂單
+Route::get('/my-order', 'Controller@myOrder');
+
 //會員登出
 Route::get('/logout', 'Controller@logout');
 
