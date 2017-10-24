@@ -30,6 +30,7 @@ class Controller extends BaseController
         }
         $this->product_categorys = httpFunction::dataCategorys('product_categorys' , 'Y' , '=' , 0 , $this->Lang);//第一層分類
         $this->news_categorys = httpFunction::dataCategorys('news_categorys' , 'N' , '=' , 0 , $this->Lang);//第一層分類
+        $this->qa_categorys = httpFunction::dataCategorys('qa_categorys' , 'N' , '=' , 0 , $this->Lang);//第一層分類
 
         $pachTitle = 'http://';
         if($request->server('SERVER_PORT') != '80')
@@ -38,7 +39,7 @@ class Controller extends BaseController
         }
 
         $this->server_name = $pachTitle.$request->server('SERVER_NAME');//取的網址
-
+       // dd($this->server_name);
     }
 
     /**
@@ -54,6 +55,7 @@ class Controller extends BaseController
 
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
 
         $sql = 'select * from index_banner where status=? and lang = ? order by sortIndex asc';
         $getData = DB::select($sql,array('Y',$data['lang']));
@@ -243,6 +245,7 @@ class Controller extends BaseController
         $data['addCss'] = 'about';
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         $data['topCategory'] = array();
@@ -364,6 +367,7 @@ class Controller extends BaseController
         $data['addCss'] = 'about';
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
         $data['serverName'] = $_SERVER["SERVER_NAME"];
         $data['news'] = array();
@@ -446,6 +450,114 @@ class Controller extends BaseController
     }
 
     /**
+     * 常見問題
+     * @param Request $request
+     * @return mixed
+     */
+    public function qa(Request $request){
+
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['addCss'] = 'about';
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+        $data['topCategory'] = array();
+        //取得分類資訊
+        if(!empty($request->category) && $request->category != null) {
+            $sql = 'select * from qa_categorys where guid=? and lang=?';
+            $getData = DB::select($sql, array($request->category,$data['lang']));
+            $data['topCategory'] = (array)$getData[0];
+            if ($data['topCategory']["pic"] != '') {
+                $picArr = explode(',', $data['topCategory']["pic"]);
+                $data['topCategory']["pic"] = '/_upload/images/' . $picArr[0];
+
+            } else {
+                $data['topCategory']["pic"] = '/images/background/5.jpg';
+            }
+        }
+
+
+        $addPath = '';//頁碼用增加多項判斷
+
+        $page = 1;
+        //分頁開始與結束
+        if(isset($request->page) && !empty($request->page))
+        {
+            $page = $request->page;
+        }
+        $needNum = 10;
+        $startNum = ($page - 1) * $needNum;
+
+
+        $searchVal = array('Y',$data['lang']);
+
+        $sql = 'select * from qa_data where status=? and lang = ?  ';
+
+        if(!empty($request->category) && $request->category != null)
+        {
+            $sql .= ' and category=\''.$request->category.'\'';
+
+            $addPath .= "/".$request->category;
+        }
+
+
+
+        $getDataTemp = DB::select($sql,$searchVal);//取得總數
+
+        $sql .= ' order by sortIndex desc  Limit '.$startNum.','.$needNum;
+
+
+
+
+        $getData = DB::select($sql,array('Y',$data['lang']));
+
+        $data['totalNum'] = count($getDataTemp);
+
+        $pageList = httpFunction::pageList($page , $needNum , count($getDataTemp) , '/qa' , $addPath);//取得頁碼顯示
+        $data['pageList'] = $pageList['PageList'];
+
+        $data['qa'] = array();
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+
+
+            $tempTime = strtotime($tempData["date"]);
+            $tempData["date"] = date('Y-m-d',$tempTime);
+
+            $data["qa"][] = $tempData;
+        }
+
+
+        //取得分類資訊
+        $sql = 'select guid,title,(select count(guid) from qa_data where category = qa_categorys.guid ) as countNum from qa_categorys where lang=? and status=? order by sortIndex asc';
+        $getData = DB::select($sql,array($data['lang'],'Y' ));
+        $data['subCategory'] = $getData;
+
+
+        //SEO資訊------------------------------------------
+        $data['webTitle'] = $data['topCategory']['seo_title'].' - '.$data['webData']["seo_title"];
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+
+        //------------------------------------------------
+//取購物車資訊---------------------------------------------
+        $shopData = httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
+        //取購物車資訊 END-----------------------------------------
+
+        $data['uri'] = 'qa';
+
+        return view('home.qa' , $data);
+    }
+
+
+    /**
      * 關於我們
      * @param Request $request
      * @return mixed
@@ -457,6 +569,7 @@ class Controller extends BaseController
 
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
@@ -556,6 +669,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         $data['category'] = $request->category;
@@ -798,6 +912,7 @@ class Controller extends BaseController
 
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         $sql = 'select *,(select title from product_categorys where guid = product.category ) as categoryTitle from product where guid=? and lang=?';
@@ -892,6 +1007,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         $addPath = '';
@@ -988,6 +1104,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         //取得縣市
@@ -1044,6 +1161,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         switch($request->type)
@@ -1076,7 +1194,61 @@ class Controller extends BaseController
         $data['lang'] = 'tw';
         $data['webData'] = httpFunction::webData($data['lang']);
 
-        $data = memberFunction::checkMember($request->codes);
+        //$data = memberFunction::checkMember($request->codes);
+
+
+
+        $data['type'] = 'error';
+        $data['confirmButtonText'] = '返回首頁';
+        $data['url'] = 'login';
+
+        if($request->codes != null && !empty($request->codes))
+        {
+            $codeArr = explode('_',base64_decode($request->codes));
+
+            if(count($codeArr) >= 2) {
+                $getData = DB::select("select id,guid,status from member where username=? and date=? ", array($codeArr[0], $codeArr[1]));
+
+
+                //驗證成功
+                if (count($getData) > 0) {
+
+                    if ($getData[0]->status == "N") {
+                        $saveArr = array('status' => 'Y', 'editID' => $getData[0]->guid);
+                        $re = DbFunction::UpdateDB('member', $saveArr);
+
+                        $data['altTitle'] = '啟用成功!';
+                        $data['altSubTitle'] = '您已可以登入使用網站功能了!';
+                        $data['type'] = 'success';
+                        $data['confirmButtonText'] = '登入會員';
+                        $data['url'] = 'login';
+                    } else {
+
+                        $data['altTitle'] = '該帳號已啟用!';
+                        $data['altSubTitle'] = '該帳號已啟用過了，不須再次使用啟用功能!';
+
+                    }
+
+                } else {
+                    $data['altTitle'] = '啟用失敗!';
+                    $data['altSubTitle'] = '請檢察是否連結錯誤，或使用聯絡我們通知管理員!';
+
+                }
+            }
+            else
+            {
+                $data['altTitle'] = '未知錯誤!';
+                $data['altSubTitle'] = '此為無效連結!';
+
+            }
+        }
+        else
+        {
+            $data['altTitle'] = '未知錯誤!';
+            $data['altSubTitle'] = '此為無效連結!';
+
+        }
+
 
         return view('home.alert' , $data);
     }
@@ -1093,6 +1265,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         //取購物車資訊---------------------------------------------
@@ -1158,11 +1331,16 @@ class Controller extends BaseController
      */
     public function checkout(Request $request)
     {
+
         $data = array();
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
+
+
+        $data['or_no'] ='A'.date('ymdHis');
 
         //取購物車資訊---------------------------------------------
         $shopData = httpFunction::getShopList();
@@ -1256,8 +1434,9 @@ class Controller extends BaseController
      * @param Request $request
      * @throws Exception
      */
-    public function pay(Request $request)
+    public function payUse(Request $request)
     {
+
         $data = array();
 
         //取得總金額
@@ -1292,15 +1471,28 @@ class Controller extends BaseController
         $data['fareText'] = $fareData["fareText"];//運費敘述
 
         $data['shopCarMember'] = session('shopCarMember');//購物者資訊
+        Session::forget('shopCarMember');
+        //dd($data['shopCarMember']);
 
 
+        // 定義顯示在圖片上的文字，可以再加上大寫字母
+       /* $str = '0123456789';
+
+        $l = strlen($str); //取得字串長度
+        $verification= '';
+        for($i=0; $i<2; $i++){
+            $num=rand(0,$l-1);
+            $verification.= $str[$num];
+        }*/
 
         $payData = array();
-        $payData['or_no'] = 'A'.date('ymdHis').httpFunction::randCode();
-
+        //$data['shopCarMember']['or_no'] = 'A'.date('ymdHis');
+        //$payData['MerchantTradeNo'] = 'A'.date('ymdHis');
+        Session::forget('or_no');
+        session(['or_no' => 'A'.date('ymdHis')]);//紀錄session
                 $payData['bank'] = 'ecpay';//綠界
                 $payData['MerchantID'] = '2000132';
-                //$payData['MerchantTradeNo'] = '2000132';
+                $payData['MerchantTradeNo'] = session('or_no');
                 $payData['HashKey'] = '5294y06JbISpM5x9';
                 $payData['HashIV'] = 'v77hoKGq4kWxNNIS';
                 $payData['ServiceURL'] ='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
@@ -1309,8 +1501,9 @@ class Controller extends BaseController
                 $payData['ClientRedirectURL'] = $this->server_name.'/payEnd';
                 //$payData['PeriodReturnURL'] = $this->server_name.'/re.php';
 
+            session(['shopCarMember' =>  $data['shopCarMember']]);//紀錄session
 
-        \App\Http\Controllers\PaySDK::runPaySDK($payData['bank']  , $payData, $data);
+       \App\Http\Controllers\PaySDK::runPaySDK($payData['bank']  , $payData, $data);
 
 
         	//PaySDK::runPaySDK("ecpay"  , $payData, $data);
@@ -1324,9 +1517,27 @@ class Controller extends BaseController
     public function payRe(Request $request){
 
         $rePayData = $request->all();//取得購物回傳資訊
-        $rePayData['editID'] = $rePayData['MerchantTradeNo'];
+       // $rePayData['editID'] = $rePayData['MerchantTradeNo'];
+
+        $or_no = $rePayData['MerchantTradeNo'];
         unset($rePayData['MerchantTradeNo']);
-        DbFunction::UpdateDB('order_pay_data' , $rePayData);
+
+          //取得對應ID
+           $sql = 'select id from order_pay_data where MerchantTradeNo=?';
+           $getData = DB::select($sql,array($or_no));
+
+           $rePayData['id'] = $getData[0]->id;
+           DbFunction::UpdateDB('order_pay_data' , $rePayData);
+
+                 //取得對應ID
+                 $sql = 'select id from order_data where or_no=?';
+                 $getData = DB::select($sql,array($or_no));
+
+
+                 $orData['id'] = $getData[0]->id;
+                 $orData['status'] = 'B';
+                 DbFunction::UpdateDB('order_data' , $orData);
+
         echo "1|OK";
     }
 
@@ -1339,6 +1550,7 @@ class Controller extends BaseController
     public function payEnd(Request $request){
 
         $rePayData = $request->all();//取得購物回傳資訊
+
         $data = array();
                 $shopData = httpFunction::getShopList();
                 $data['shopList'] = $shopData["shopList"];
@@ -1346,10 +1558,14 @@ class Controller extends BaseController
                 $data['shopTotalQty'] = $shopData["totalQty"];
                 $data['shopTotalPriceAndFare'] = $shopData["totalPrice"];//含運費總金額
                 $fareData  = httpFunction::fareCalculation($data['shopTotalPriceAndFare']);//運費計算
-
+                 $shopCarMember = session('shopCarMember');
 
 
                 $shopCarMember['status'] = 'N';
+
+
+
+
 
                 $canAddOrder = 'N';
                 //交易成功
@@ -1359,11 +1575,12 @@ class Controller extends BaseController
                     $canAddOrder = 'Y';
                     $shopCarMember['status'] = 'B';
                 }
-                //信用卡
-                if($rePayData['RtnCode'] == '2' && (strstr($rePayData['PaymentType'],'ATM') || strstr($rePayData['PaymentType'],'CVS')  || strstr($rePayData['PaymentType'],'BARCODE')))
+                //非信用卡
+                if( ($rePayData['RtnCode'] == '2' || $rePayData['RtnCode'] == '10100073') && (strstr($rePayData['PaymentType'],'ATM') || strstr($rePayData['PaymentType'],'CVS')  || strstr($rePayData['PaymentType'],'BARCODE')))
                 {
                     $canAddOrder = 'Y';
                 }
+
 
                 //金流成功
                 if($canAddOrder == 'Y')
@@ -1374,7 +1591,7 @@ class Controller extends BaseController
                     DbFunction::InsertDB('order_pay_data', $rePayData);
 
                     //寫入購物車
-                    $shopCarMember = session('shopCarMember');
+
                     $shopCarMember['or_no'] = $rePayData['MerchantTradeNo'];
                     $shopCarMember['guid'] = httpFunction::getGUID();
                     $shopCarMember['member_id'] ='0';
@@ -1391,6 +1608,7 @@ class Controller extends BaseController
                     $shopCarMember['fare_price'] =  $fareData["fare"];//運費
                     $shopCarMember['product_price'] = $data['shopTotalPrice'];//商品金額
                     $shopCarMember['total_qty'] = $data['shopTotalQty'];//商品金額
+
 
                     //寫入購買細項
                     $payList = '';
@@ -1422,9 +1640,80 @@ class Controller extends BaseController
 
                     DbFunction::InsertDB('order_data', $shopCarMember);//寫入訂單主檔
 
+                    $shopCarMember['payTypeText'] = httpFunction::payType($shopCarMember["payType"]);//付款方式
+                    $shopCarMember['invoiceText'] = httpFunction::invoiceType($shopCarMember["invoice"]);//發票模式
+
+                    //付款方式係向
+                    $payTypeAtm = '';
+
+                    if($shopCarMember["payType"] != 'Credit')
+                    {
+                        $sql = 'select (select title from bank_data where `code`= order_pay_data.PaymentType) as bank_title , PaymentNo , vAccount ,BankCode,ExpireDate from `order_pay_data` where MerchantTradeNo=?';
+                        $getData = DB::select($sql,array($shopCarMember['or_no']));
+                        $payData = $getData[0];
+
+                        if($shopCarMember["payType"] == 'ATM')
+                        {
+                            $payTypeAtm = ' <div >
+                                        <div class="text-left">繳款銀行代碼：<b>'.$payData->BankCode.'</b></div>
+                                        <div class="text-left">繳款銀行名稱：<b>'.$payData->bank_title.'</b></div>
+                                        <div class="text-left">繳款帳號：<b>'.$payData->vAccount.'</b></div>
+                                        <div class="text-left">繳費期限：<b>'.$payData->ExpireDate.'</b></div>
+                                    </div>';
+
+                        }
+                        if($shopCarMember["payType"] == 'CVS')
+                        {
+                            $payTypeAtm = ' <div >
+                                        <div class="text-left">繳費代碼：<b>'.$payData->PaymentNo.'</b></div>
+                                        <div class="text-left">繳費期限：<b>'.$payData->ExpireDate.'</b></div>
+                                    </div>';
+
+                        }
+                    }
+
+                   $shopCarMember["invoiceData"] = '';
+                    if($shopCarMember["invoice"] == '3')
+                    {
+                        $shopCarMember["invoiceData"] = '  <tr style="background-color:#FFFFFF;">
+                            <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px; width: 80px">&nbsp;開立方式 </td>
+                            <td align="left" style=" font-family:Microsoft JhengHei;Verdana, Geneva, sans-serif; font-size:15px;">&nbsp;&nbsp; 公司抬頭：'.$shopCarMember["invoice_title"].'，公司統編：'.$shopCarMember["invoice_code"].'</td>
+                          </tr>';
+                    }
+
+                    //發信----------------------------------------------
+                    $webData = httpFunction::webData('tw');
+
+                    $contents = httpFunction::readFileData(public_path() . '/email/order.html');
+                    $contents = str_replace( '{$use_title}', '訂購通知',$contents);
+                    $contents = str_replace( '{$web_url}', "http://".$_SERVER['HTTP_HOST'],$contents);
+                    $contents = str_replace( '{$web_address}', $webData['address'],$contents);
+                    $contents = str_replace( '{$web_phone}', $webData['phone'],$contents);
+
+                    $contents = str_replace( '{$payList}', $payList,$contents);
+
+                    $contents = str_replace( '{$payTypeAtm}', $payTypeAtm,$contents);
+
+                    $contents = str_replace( '{$web_title}', $webData['title'],$contents);
+
+                    foreach($shopCarMember as $key => $value)
+                    {
+                        $contents = str_replace( '{$'.$key.'}', $value,$contents);
+                    }
+
+
+
+
+
+                    httpFunction::sendEmail($webData["get_email"] ,$webData["title"],$shopCarMember['email'].','.$webData["get_email"],$webData["title"],$contents,'訂購通知');
+                    //發信 end----------------------------------------------
+
+
+
                     Session::forget('shopCar');
                     Session::forget('shopCarMember');
-                    return redirect('/complete');//轉跳頁面
+                    Session::forget('or_no');
+                    return redirect('/complete/'.$rePayData['MerchantTradeNo']);//轉跳頁面
                     exit;
 
                 }
@@ -1462,7 +1751,59 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
+
+        if(!empty($request->or_no) && $request->or_no != null)
+        {
+            //取得購買資訊
+            $sql = 'select * from `order_data` where or_no=?';
+            $getData = DB::select($sql,array($request->or_no));
+            $data['order'] = array();
+
+            if(count($getData) > 0)
+            {
+                $data['order'] = (array)$getData[0];
+
+                $data['order']['total_price'] = number_format($data['order']['total_price'], 0, '.', ',');
+
+                $data['order']["payTypeText"] = httpFunction::payType($data['order']["payType"]);
+
+
+
+                $data['order']["statusText"] = httpFunction::orderStatus($data['order']["status"]);
+
+                $data['order']["payTypeText"] = httpFunction::payType($data['order']["payType"]);
+
+                $sql = 'select * from `order_spec` where ouid=?';
+                $getData = DB::select($sql,array($data['order']['guid']));
+                $data['order_spec'] = $getData;
+
+                //取得付款方式
+                $data['order']['payData'] = array();
+
+                if($data['order']["payType"] != 'Credit')
+                {
+                    $sql = 'select (select title from bank_data where `code`= order_pay_data.PaymentType  ) as bank_title , PaymentNo , vAccount ,BankCode,ExpireDate from `order_pay_data` where MerchantTradeNo=?';
+                    $getData = DB::select($sql,array($request->or_no));
+                    $data['order']['payData'] = $getData[0];
+
+                }
+
+
+            }
+
+
+        }
+        else
+        {
+            return redirect('/');//轉跳頁面
+            exit;
+        }
+
+
+
+        //Session::forget('shopCarMember');
 
         //SEO資訊------------------------------------------
         $data['webTitle'] = '購物完成 - '.$data['webData']["seo_title"];
@@ -1471,8 +1812,14 @@ class Controller extends BaseController
         //------------------------------------------------
 
 
-        $data['uri'] ='complete';
+//取購物車資訊---------------------------------------------
+        $shopData =  httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
 
+        //取購物車資訊 END-----------------------------------------
+        $data['uri'] ='complete';
         return view('home.complete' , $data);
     }
 
@@ -1488,6 +1835,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
         //SEO資訊------------------------------------------
@@ -1519,6 +1867,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
@@ -1561,6 +1910,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
@@ -1605,6 +1955,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
@@ -1671,6 +2022,7 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
@@ -1716,10 +2068,61 @@ class Controller extends BaseController
         $data['lang'] = $this->Lang;
         $data['productCategorys'] = $this->product_categorys;
         $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
         $data['webData'] = httpFunction::webData($data['lang']);
 
 
         $data['memberData'] = session('memberData');
+
+
+
+        $addPath = '';
+        $page = 1;
+        //分頁開始與結束
+        if(isset($request->page) && !empty($request->page))
+        {
+            $page = $request->page;
+        }
+        $needNum = 10;
+        $startNum = ($page - 1) * $needNum;
+
+
+
+
+        //相簿------------------------------------------------
+        $sql = 'select guid,or_no,date,status,total_price from order_data where member_id=?   ';
+
+        $getDataTemp = DB::select($sql,array($data['memberData']->id));//取得總數
+
+        $sql .= ' order by date desc  Limit '.$startNum.','.$needNum;
+
+        $getData = DB::select($sql,array($data['memberData']->id));
+
+
+        $data['totalNum'] = count($getDataTemp);
+        $pageList = httpFunction::pageList($page , $needNum , count($getDataTemp) , '/my-order' , $addPath);//取得頁碼顯示
+
+        $data['pageList'] = $pageList['PageList'];
+        $data['orderData'] = array();
+
+        for($ii=0;$ii<count($getData);$ii++)
+        {
+            $tempData = (array)$getData[$ii];
+            $tempData['total_price'] = number_format($tempData['total_price'], 0, '.', ',');
+
+
+            $tempData["statusText"] = httpFunction::orderStatus($tempData["status"]);
+
+
+
+            $data["orderData"][] = $tempData;
+        }
+        //------------------------------------------------
+
+
+
+
+
 
         //SEO資訊------------------------------------------
         $data['webTitle'] = '我的訂單 - '.$data['webData']["seo_title"];
@@ -1735,6 +2138,87 @@ class Controller extends BaseController
 
         $data['uri'] = 'my-order';
         return view('home.my-order' , $data);
+
+    }
+
+    /**
+     * 訂單內容頁
+     * @param Request $request
+     * @return mixed
+     */
+    public function orderDetail(Request $request)
+    {
+
+        $data = array();
+        $data['lang'] = $this->Lang;
+        $data['productCategorys'] = $this->product_categorys;
+        $data['newsCategorys'] = $this->news_categorys;
+        $data['qaCategorys'] = $this->qa_categorys;
+        $data['webData'] = httpFunction::webData($data['lang']);
+
+        $data['order'] = array();
+
+        if(isset($request->guid) && !empty($request->guid))
+        {
+            //取得購買資訊
+
+            $sql = 'select * from `order_data` where guid=?';
+            $getData = DB::select($sql,array($request->guid));
+            $data['order'] = array();
+
+            if(count($getData) > 0)
+            {
+                $data['order'] = (array)$getData[0];
+
+                $data['order']['total_price'] = number_format($data['order']['total_price'], 0, '.', ',');
+
+
+                $data['order']["statusText"] = httpFunction::orderStatus($data['order']["status"]);
+
+                $data['order']["payTypeText"] = httpFunction::payType($data['order']["payType"]);
+
+                $sql = 'select * from `order_spec` where ouid=?';
+                $getData = DB::select($sql,array($data['order']['guid']));
+                $data['order_spec'] = $getData;
+
+                //取得付款方式
+                $data['order']['payData'] = array();
+
+                if($data['order']["payType"] != 'Credit')
+                {
+                    $sql = 'select (select title from bank_data where `code`= order_pay_data.PaymentType  ) as bank_title , PaymentNo , vAccount ,BankCode,ExpireDate from `order_pay_data` where MerchantTradeNo=?';
+                    $getData = DB::select($sql,array($data['order']['or_no']));
+                    $data['order']['payData'] = $getData[0];
+
+                }
+            }
+
+
+        }
+        else
+        {
+            return redirect('/');//轉跳頁面
+            exit;
+        }
+
+        //取購物車資訊---------------------------------------------
+        $shopData = httpFunction::getShopList();
+        $data['shopList'] = $shopData["shopList"];
+        $data['shopTotalPrice'] = $shopData["totalPrice"];
+        $data['shopTotalQty'] = $shopData["totalQty"];
+        //取購物車資訊 END-----------------------------------------
+
+        //SEO資訊-----------------------------------------
+        $data['webTitle'] =  $data['order']['or_no'].' - ' . $data['webData']["seo_title"];
+
+        $data['seoDescription'] = $data['webData']["seo_description"];
+        $data['seoKeywords'] = $data['webData']["seo_keywords"];
+
+
+        //------------------------------------------------
+
+        $data['uri'] = 'order-detail';
+        return view('home.order-detail' , $data);
 
     }
 

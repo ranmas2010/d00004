@@ -150,7 +150,7 @@
             <div class="title-icon"><img src="/images/icons/sec-title-icon-1.png" alt="" /></div>
             <h2>新品上市</h2>
             <div class="title">New Listing</div>
-            <div class="text">We are group of teachers who really love childrens and enjoy every moment of teaching</div>
+            <div class="text">最新上市的桌遊</div>
         </div>
         <div class="row clearfix">
 
@@ -197,7 +197,7 @@
             <div class="title-icon"><img src="/images/icons/sec-title-icon-1.png" alt="" /></div>
             <h2>設計團隊</h2>
             <div class="title">Design's Team</div>
-            <div class="text">We are group of teachers who really love childrens and enjoy every moment of teaching</div>
+            <div class="text">充滿創意的一群設計師們</div>
         </div>
 
         <div class="three-item-carousel owl-carousel owl-theme">
@@ -244,7 +244,7 @@
             <div class="title-icon"><img src="/images/icons/sec-title-icon-1.png" alt="" /></div>
             <h2>活動寫真</h2>
             <div class="title">Our Portfolio</div>
-            <div class="text">We are group of teachers who really love childrens and enjoy every moment of teaching</div>
+            <div class="text">近期活動的一些點點滴滴</div>
         </div>
 
         <div class="row clearfix">
@@ -293,7 +293,7 @@
             <div class="title-icon"><img src="/images/icons/sec-title-icon-1.png" alt="" /></div>
             <h2>最新消息&活動公告</h2>
             <div class="title">News & Events</div>
-            <div class="text">We are group of teachers who really love childrens and enjoy every moment of teaching</div>
+            <div class="text">提供最新關於莫仔的動態與活動訊息</div>
         </div>
         <div class="row clearfix">
             <!--Blog Column-->
@@ -315,10 +315,7 @@
                         <div class="content-column col-md-8 col-sm-8 col-xs-12">
                             <div class="content-inner">
                                 <h3><a href="/new/{{$col['guid']}}" title="{{$col['title']}}">{{$col['title']}}</a></h3>
-                                <ul class="post-meta">
-                                    <li><a href="blog-single.html"><span class="icon fa fa-user"></span>Adam Rose</a></li>
-                                    <li><a href="blog-single.html"><span class="icon fa fa-commenting-o"></span> 7 Comments</a></li>
-                                </ul>
+
                             </div>
                             <div class="text">{!! $col['notes'] !!}...</div>
                         </div>

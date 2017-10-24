@@ -116,17 +116,8 @@
 									@endforeach
 								</ul>
 							</li>
-							<li class="dropdown"><a href="#">Pages</a>
-								<ul>
-									<li><a href="teachers.html">Teachers</a></li>
-									<li><a href="features.html">Features</a></li>
-									<li><a href="error-page.html">404 Page</a></li>
-								</ul>
-							</li>
-						</ul>
-						<!--Right Nav-->
-						<ul class="navigation right-nav clearfix">
-							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
+
+
 							<li class="dropdown @if($uri == 'news') current @endif "><a href="/news">最新消息</a>
 								<ul>
 									@foreach ($newsCategorys as $col)
@@ -134,6 +125,26 @@
 									@endforeach
 								</ul>
 							</li>
+
+						</ul>
+						<!--Right Nav-->
+						<ul class="navigation right-nav clearfix">
+							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
+
+
+
+
+							<li class="dropdown @if($uri == 'qa') current @endif "><a href="/qa">常見問題</a>
+								<ul>
+									@foreach ($qaCategorys as $col)
+										<li><a href="/qa/1/{{$col->guid}}">{{$col->title}}</a></li>
+									@endforeach
+								</ul>
+							</li>
+
+
+
+
 							<li><a href="/contact">聯絡我們</a></li>
 
 						</ul>
@@ -198,14 +209,8 @@
 									@endforeach
 								</ul>
 							</li>
-							<li class="dropdown"><a href="#">Pages</a>
-								<ul>
-									<li><a href="teachers.html">Teachers</a></li>
-									<li><a href="features.html">Features</a></li>
-									<li><a href="error-page.html">404 Page</a></li>
-								</ul>
-							</li>
-							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
+
+
 							<li class="dropdown @if($uri == 'news') current @endif"><a href="/news">最新消息</a>
 								<ul>
 									@foreach ($newsCategorys as $col)
@@ -213,6 +218,18 @@
 									@endforeach
 								</ul>
 							</li>
+
+
+							<li @if($uri == 'gallery') class="current" @endif><a href="/gallery">活動寫真</a></li>
+
+							<li class="dropdown @if($uri == 'qa') current @endif"><a href="/qa">常見問題</a>
+								<ul>
+									@foreach ($qaCategorys as $col)
+										<li><a href="/qa/1/{{$col->guid}}">{{$col->title}}</a></li>
+									@endforeach
+								</ul>
+							</li>
+
 							<li><a href="/contact">聯絡我們</a></li>
 							<li><a href="/my-account">會員專區</a></li>
 							<li><a href="/car" class="cart-icon">購物車<span class="shopCarCount">{{count($shopList)}}</span></a></li>

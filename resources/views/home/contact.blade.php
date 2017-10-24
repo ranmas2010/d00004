@@ -64,26 +64,37 @@
                     <!-- contact Form -->
                     <div class="contact-form">
                         <!--contact Form-->
-                        <form method="post" action="sendemail.php" id="contact-form">
+                        <form method="post" action="" id="contact_form" name="contact_form">
 
                             <div class="form-group">
-                                <input type="text" name="username" placeholder="姓名 *" required>
+                                <input type="text" name="name" placeholder="姓名 *" required>
+                                <div class="_formErrorMsg"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="company" placeholder="公司名稱" >
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" name="phone" placeholder="連絡電話 *" required>
+                                <div class="_formErrorMsg"></div>
                             </div>
 
                             <div class="form-group">
                                 <input type="email" name="email" placeholder="Email *" required>
+                                <div class="_formErrorMsg"></div>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="subject" placeholder="諮詢主旨 *">
+                                <input type="text" name="subject" placeholder="諮詢主旨 *" required>
+                                <div class="_formErrorMsg"></div>
                             </div>
 
                             <div class="form-group">
-                                <textarea name="message" placeholder="諮詢內容"></textarea>
+                                <textarea name="notes" placeholder="諮詢內容" required></textarea>
                             </div>
                             {!! app('captcha')->display() !!}
                             <div class="form-group">
-                                <button class="theme-btn btn-style-one" type="submit" name="submit-form">送出</button>
+                                <button class="theme-btn btn-style-one" type="submit" name="submit-form" id="sendBut">送出</button>
                             </div>
 
                         </form>

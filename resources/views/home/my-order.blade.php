@@ -40,21 +40,36 @@
                                     </thead>
                                     <tbody>
 
-
-                                    <tr id="_shopData1501045835List">
+                                    @if(count($orderData)>0)
+                                    @foreach ($orderData as $col)
+                                    <tr id="_shopData{{$col['guid']}}List">
                                         <td class="product-thumbnail  text-center">
-                                           2017-09-27
+                                          {{substr($col['date'],0,10)}}
                                         </td>
-                                        <td class="text-center">A0000000001</td>
+                                        <td class="text-center">{{$col['or_no']}}</td>
 
-                                        <td class="text-center">已出貨</td>
+                                        <td class="text-center">{{$col['statusText']}}</td>
 
-                                        <td class="product-subtotal">NT$ 999</td>
-                                        <td class="product-remove">
-                                            <a href="/order-detail/1505748129" class="delShopCar" data-puid="1501045835"><i class="fa fa-search" aria-hidden="true"></i></a>
-                                            <a href="#1" class="delOrder" data-puid="1501045835"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                        <td class="product-subtotal">NT$ {{$col['total_price']}}</td>
+                                        <td class="product-remove text-left">
+                                            <a href="/order-detail/{{$col['guid']}}" class="delShopCar" data-puid="1501045835"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                            @if($col['status'] == 'N')
+                                            <a href="#1" class="delOrder" data-value="{{$col['guid']}}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                @endif
                                         </td>
                                     </tr>
+
+                                    @endforeach
+                                    @else
+                                        <tr >
+
+                                            <td class="text-center" colspan="5">無購買紀錄!</td>
+
+
+                                        </tr>
+
+                                    @endif
+
 
 
 
@@ -81,10 +96,7 @@
 
     <div class="styled-pagination text-center">
         <ul class="clearfix">
-            <li><a class="prev" href="#"><span class="fa fa-angle-left"></span></a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#" class="active">2</a></li>
-            <li><a class="next" href="#"><span class="fa fa-angle-right"></span></a></li>
+            {!! $pageList !!}
         </ul>
     </div>
 </section>

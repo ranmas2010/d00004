@@ -44,7 +44,7 @@
             <div class="title-icon"><img src="/images/icons/sec-title-icon-1.png" alt="" /></div>
             <h2>設計團隊</h2>
             <div class="title">Design's Team</div>
-            <div class="text">We are group of teachers who really love childrens and enjoy every moment of teaching</div>
+            <div class="text">充滿創意的一群設計師們</div>
         </div>
 
         <div class="three-item-carousel owl-carousel owl-theme">

@@ -47,7 +47,6 @@ class FieldController extends Controller
 					'fare_price'  => 'price,r',
 					'total_price'  => 'price,r',
 					'total_qty'  => 'text,r',
-					'pay_no'  => 'text,r',
 					'payType'  => 'payType,r',
 					'shopList'  => 'shopList,r',
 					'status'  => 'status2,n,N,已結案/尚未付款/已處理/已付款/已取消/退貨中/已退貨,Y/N/A/B/C/D/E',
@@ -164,6 +163,25 @@ class FieldController extends Controller
 					'seo_keywords'  => 'textarea_lang,f',
 					'seo_description'  => 'textarea_lang,f',
 				),
+
+			'qa_categorys' =>
+				array(
+					'lang'  => 'lang,n',
+					'title'  => 'text_lang,n',
+					'status'  => 'status,n,Y',
+					'seo_title'  => 'text_lang,n',
+					'seo_keywords'  => 'textarea_lang,f',
+					'seo_description'  => 'textarea_lang,f',
+					'pic'  => 'images,n,<div style="color:#FF0000">※圖片大小為 1920 x 687</div>',
+				),
+			'qa_data' =>
+				array(
+					'lang'  => 'lang,n',
+					'title'  => 'text_lang,n',
+					'category'  => 'select,n,qa_categorys,A',
+					'description'  => 'ckeditor_lang,f',
+					'status'  => 'status,n,Y',
+				),
 			'designer' =>
 				array(
 					'lang'  => 'lang,n',
@@ -187,7 +205,6 @@ class FieldController extends Controller
 
 			'smtp_data' =>
 				array(
-					'email'  => 'email,n',
 					'host'  => 'text,n',
 					'port'  => 'text,n',
 					'smtp_auth'  => 'status,n,Y',

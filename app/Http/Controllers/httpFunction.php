@@ -250,6 +250,11 @@ class httpFunction extends Controller
 	public static function useColumns($colData){
 
 		$arr = array('guid','pic','admin_id','name','email','title','category','sortIndex','status','date');
+		if(session('thisTable') == 'order_data')
+		{
+			$arr = array('guid','or_no','name','member_id','status','total_price','date');
+
+		}
 		$re = array();
 		$chkCol = array();
 		$chkComment = array();
@@ -958,6 +963,29 @@ class httpFunction extends Controller
                                             </div></div>';
 					break;
 
+				//價格
+				case "price":
+
+					$formNotes ='';
+					if(!empty($fieldValArr[2]))
+					{
+						$formNotes = $fieldValArr[2];
+					}
+
+					$addText .= '<div class="form-group"><label for="input01" class="col-sm-2 control-label">' . $Comment . $requiredtext . '</label>';
+
+					if(!empty($viewVal))
+					{
+						$viewVal = '$'. number_format($viewVal, 0, '.', ',');
+					}
+
+
+					$addText .= '<div class="col-sm-6">
+                                                <input type="text" ' . $required . ' class="form-control ePrice" id="' . $key . '" name="' . $key . '" value="' . $viewVal . '">'.$formNotes.'
+                                            </div></div>';
+
+
+					break;
 
 
 				//檔案上傳
@@ -1001,6 +1029,114 @@ class httpFunction extends Controller
 
 
 					break;
+
+
+
+				//訂購商品列表
+				case "shopList":
+
+					$formNotes ='';
+					$addText .= '<div class="form-group"><label for="input01" class="col-sm-2 control-label">'.$Comment.'</label>';
+					//取得已購買的資料
+					$getData2 = DB::select('select * from order_spec where ouid = ? order by id asc',array($valData[$defLang]['guid']));
+
+					$addText .= '<div class="col-sm-9">';
+
+					if(count($getData2) > 0) {
+
+						$addText .= ' <table width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th class="product-price">商品圖</th>
+                                        <th class="product-name">商品名稱</th>
+                                        <th class="product-price">單價</th>
+                                        <th class="product-quantity">數量</th>                                 
+                                        <th class="product-subtotal">價位</th>
+                                    </tr>
+                                    </thead>   
+                                     <tbody><tr><td colspan="6"><hr></td></tr>';
+
+						for($ss=0;$ss<count($getData2);$ss++)
+						{
+
+							//取得主檔相關資料
+							$getData3 = DB::select('select pic from product where guid = ? ',array($getData2[$ss]->puid));
+							$picArr = array();
+							if($getData3[0]->pic != '')
+							{
+								$picArr = explode(',',$getData3[0]->pic);
+							}
+
+							//$getData4 = DB::select('select (select color from spec where guid=product_spec.spec) as color,(select title from spec where guid=product_spec.spec) as title  from product_spec where guid = ? ',array($getData2[$ss]->suid));
+
+
+							$addText .= ' <tr>
+                                        <td class="product-thumbnail">
+                                            <a target="_blank" href="/product-details/'.$getData2[$ss]->puid.'"><img src="/timthumb.php?src=/_upload/images/'.$picArr[0].'&h=126&w=126" ></a>
+                                        </td>
+                                        <td class="product-name"><a href="/product-details/'.$getData2[$ss]->puid.'" target="_blank">'.$getData2[$ss]->title.'</a></td>
+                                        <td class="product-price"><span class="amount">$'.number_format($getData2[$ss]->price, 0, '.', ',').'</span></td>
+                                        <td class="product-quantity"><span class="unit">'.$getData2[$ss]->qty.'</span></td>
+                                     
+                                        <td class="product-subtotal">$'.number_format(($getData2[$ss]->price * $getData2[$ss]->qty), 0, '.', ',').'</td>
+
+                                    </tr><tr><td colspan="6"><hr></td></tr>';
+						}
+
+
+						$addText .= '</tbody></table>';
+
+
+					}
+					$addText .= '</div></div>';
+
+
+					break;
+
+
+				//付款方式
+				case "payType":
+
+					$formNotes ='';
+					if(!empty($fieldValArr[2]))
+					{
+						$formNotes = $fieldValArr[2];
+					}
+
+					$addView = '';
+
+
+					if($viewVal != 'Credit') {
+
+
+						$sql = 'select (select title from bank_data where `code`= order_pay_data.PaymentType  ) as bank_title , PaymentNo , vAccount ,BankCode,ExpireDate from `order_pay_data` where MerchantTradeNo=?';
+						$getData = DB::select($sql,array($valData[$defLang]['or_no']));
+
+						if ($viewVal == 'ATM') {
+							$addView = '   <div class="text-left">繳款銀行代碼：<b>'.$getData[0]->BankCode.'</b></div>
+                                                <div class="text-left">繳款銀行名稱：<b>'.$getData[0]->bank_title.'</b></div>
+                                                <div class="text-left">繳款帳號：<b>'.$getData[0]->vAccount.'</b></div>
+                                                <div class="text-left">繳費期限：<b>'.$getData[0]->ExpireDate.'</b></div>';
+						}
+
+						if ($viewVal == 'CVS') {
+							$addView = '   <div class="text-left">繳費代碼：<b>'.$getData[0]->PaymentNo.'</b></div>                                            
+                                           <div class="text-left">繳費期限：<b>'.$getData[0]->ExpireDate.'</b></div>';
+						}
+					}
+
+					$addText .= '<div class="form-group"><label for="input01" class="col-sm-2 control-label">' . $Comment . $requiredtext . '</label>';
+
+					$addText .= '<div class="col-sm-6">
+                                             <div>'.httpFunction::payType($viewVal).'</div>
+                                             '.$addView.'
+                                            </div></div>';
+
+
+
+
+					break;
+
 
 			}
 			$re[] = $addText;
@@ -1066,7 +1202,7 @@ class httpFunction extends Controller
 		}
 		else
 		{
-			if(!strstr($dataType["Tables"],'contact') && !strstr($dataType["Tables"],'news')  && !strstr($dataType["Tables"],'admin_account'))
+			if(!strstr($dataType["Tables"],'contact') && !strstr($dataType["Tables"],'news')  && !strstr($dataType["Tables"],'admin_account') && !strstr($dataType["Tables"],'order_data'))
 			{
 				$sql .= ' order by sortIndex asc , date desc';
 			}
@@ -1128,7 +1264,14 @@ class httpFunction extends Controller
 							else
 							{
 								//取得分類資料
-								$tempData = DB::select('select title from '.$dataType["Tables"].'_categorys where guid = ?' , array($value));
+								$s_tables = $dataType["Tables"] . '_categorys';
+								if($dataType["Tables"] == 'qa_data')
+								{
+									$s_tables = 'qa_categorys';
+								}
+
+
+								$tempData = DB::select('select title from '.$s_tables.' where guid = ?' , array($value));
 								if(count($tempData) > 0)
 								{
 									$selData = (array)$tempData[0];
@@ -1147,12 +1290,22 @@ class httpFunction extends Controller
 
 					  case "status":
 
-						  if(!strstr($dataType["Tables"],'contact')) {
+						  if($dataType["Tables"]  == 'contact') {
 							  if ($value == "Y") {
 								  $reData[$ii][$key] = '<a href="#1" class="changeStatus" data-value="' . $value . '" data-id="' . $data["guid"] . '"><i class="fa fa-check-square"  aria-hidden="true">啟用</i></a>';
 							  } else {
 								  $reData[$ii][$key] = '<a href="#1" class="changeStatus" style="color:#d9534f" data-value="' . $value . '" data-id="' . $data["guid"] . '"><i class="fa fa-square" aria-hidden="true" >停用</i></a>';
 							  }
+						  }
+						  else if($dataType["Tables"]  == 'order_data') {
+							  if ($value == "Y") {
+								  $reData[$ii][$key] = '<a href="#1" class="changeStatus" data-value="' . $value . '" data-id="' . $data["guid"] . '"><i class="fa fa-check-square"  aria-hidden="true">啟用</i></a>';
+							  } else {
+								  $reData[$ii][$key] = '<a href="#1" class="changeStatus" style="color:#d9534f" data-value="' . $value . '" data-id="' . $data["guid"] . '"><i class="fa fa-square" aria-hidden="true" >停用</i></a>';
+							  }
+
+							  $reData[$ii][$key]  =  httpFunction::orderStatus($value);
+
 						  }
 						  else
 						  {
@@ -1196,7 +1349,7 @@ class httpFunction extends Controller
 
 						default:
 
-							if($key == 'title')
+							if($key == 'title' || $key == "or_no")
 							{
 								$reData[$ii][$key] = '<a  href="/stageAdmin/edit/'.$dataType['Types'].'/'.$data['guid'].'">'.$value.'</a>';
 							}
@@ -1315,7 +1468,7 @@ class httpFunction extends Controller
 	public static function sendEmail($toMail , $toMailName , $fromMail , $fromName , $body , $Subject)
 	{
 		include_once(app_path() . '/PHPMailer/PHPMailerAutoload.php');
-
+		//require 'vendor/autoload.php';
 		$webData = httpFunction::webData('tw');
 
 		$sql = 'select * from smtp_data where guid=? ';
@@ -1324,6 +1477,9 @@ class httpFunction extends Controller
 			//dd($smtpData);
 
 		$mail = new \PHPMailer(true);
+
+		//$mail = new PHPMailer(true);
+
 		try {
 			$mail->CharSet = "utf-8";
 			$mail->Encoding = "base64";
@@ -1607,4 +1763,126 @@ class httpFunction extends Controller
 		return $verification;
 	}
 
+
+	/**
+	 * 訂單狀態
+	 * @param $status
+	 * @return string
+	 */
+	public static function orderStatus($status)
+	{
+
+		$re = "";
+
+		switch($status)
+		{
+			case "Y":
+
+				$re = '已結案';
+
+				break;
+			case "N":
+
+				$re = '未處理';
+
+				break;
+			case "A":
+
+				$re = '已處理';
+
+				break;
+			case "B":
+
+				$re = '已付款';
+
+				break;
+			case "C":
+
+				$re = '已取消';
+
+				break;
+			case "D":
+
+				$re = '退貨中';
+
+				break;
+			case "E":
+
+				$re = '已退貨';
+
+				break;
+			case "F":
+
+				$re = '付款中';
+
+				break;
+			case "G":
+
+				$re = '運送中';
+
+				break;
+		}
+
+
+		return $re;
+	}
+
+	/**
+	 * 付款方式
+	 * @param $payType
+	 * @return string
+	 */
+	public static function payType($payType)
+	{
+		$re = '';
+
+		switch($payType)
+		{
+			case "Credit":
+				$re = '線上刷卡';
+				break;
+			case "ATM":
+				$re = 'ATM匯款';
+				break;
+			case "BARCODE":
+				$re = '超商條碼';
+				break;
+			case "CVS":
+				$re = '超商代碼';
+				break;
+		}
+
+
+
+		return $re;
+
+	}
+
+	/**
+	 * 發票模式
+	 * @param $invoice
+	 * @return string
+	 */
+	public static function invoiceType($invoice)
+	{
+		$re = '';
+
+		switch($invoice)
+		{
+			case "1":
+				$re = '發票捐贈';
+				break;
+			case "2":
+				$re = '二聯式發票';
+				break;
+			case "3":
+				$re = '三聯式發票';
+				break;
+		}
+
+
+
+		return $re;
+
+	}
 }

@@ -137,8 +137,21 @@ class DbFunction extends Controller
 
 		$reData = array('updateSQL' => '' , 'error' => '' , 're' => '' );
 
-		$id = $data['editID'];
-		unset($data['editID']);
+		$PK = 'guid';
+
+		if(isset($data["editID"]))
+		{
+			$id = $data['editID'];
+			unset($data['editID']);
+		}
+		else
+		{
+			$id = $data['id'];
+			$PK = 'id';
+			unset($data['id']);
+		}
+
+
 		$val = '';
 		$valData = array();
 		foreach($data as $key => $value)
@@ -159,16 +172,6 @@ class DbFunction extends Controller
 
 
 
-		$PK = 'guid';
-
-		if(is_int($id))
-		{
-			$PK = 'id';
-		}
-		if($tables == 'order_pay_data')
-		{
-			$PK = 'MerchantTradeNo';
-		}
 
 
 		$valData[] = $id;
