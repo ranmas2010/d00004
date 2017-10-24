@@ -69,7 +69,8 @@ class PaySDK extends Controller
                     //$oPayment->Send['ClientBackURL'] = "";
 
 
-                    $oPayment->Send['MerchantTradeNo'] = $payData['or_no'];
+                    //$oPayment->Send['MerchantTradeNo'] = $payData['MerchantTradeNo'];
+                    $oPayment->Send['MerchantTradeNo'] = session('or_no');
                     $oPayment->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
                     $oPayment->Send['TotalAmount'] = (int) $data['shopTotalPriceAndFare'];
                     $oPayment->Send['TradeDesc'] = "莫仔桌遊-購物";
@@ -133,7 +134,6 @@ class PaySDK extends Controller
                     {
                         $oPayment->SendExtend["ClientRedirectURL"] = $payData['ClientRedirectURL'];
                     }
-
 
                     /* 產生訂單 */
                     $oPayment->CheckOut();

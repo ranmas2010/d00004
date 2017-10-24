@@ -7,10 +7,10 @@
 <section class="page-title" style="background-image:url({!! $topCategory['pic'] !!});">
     <div class="auto-container">
         <div class="inner-box">
-            <h1>{{$topCategory['title']}}</h1>
+            <h1>常見問題</h1>
             <ul class="bread-crumb">
                 <li><a href="/">Home</a></li>
-                <li>{{$topCategory['title']}}</li>
+                <li>常見問題</li>
             </ul>
         </div>
     </div>
@@ -28,27 +28,36 @@
                 <section class="blog-classic">
 
 
-                    @foreach ($news as $col)
-                    <!--News Style Four-->
-                    <div class="news-style-four">
-                        <div class="inner-box">
-                            <!--Image Column-->
-                            <div class="image">
-                                <a href="/new/{{$col['guid']}}"><img src="{!! $col['pic'] !!}" alt="{{$col['pic_alt']}}" /></a>
-                            </div>
-                            <!--Content Column-->
-                            <div class="content-column">
-                                <div class="inner">
-                                    <div class="post-date">{{$col['date']}}</div>
-                                    <h3><a href="/new/{{$col['guid']}}">{{$col['title']}}</a></h3>
 
-                                    <div class="text">{!! $col['notes'] !!}</div>
-                                    <a class="read-more" href="/new/{{$col['guid']}}">Read More <span class="icon fa fa-angle-right"></span></a>
-                                </div>
+                    <ul class="accordion-box">
+                        <li class="accordian-title">{{$topCategory['title']}}</li>
+
+                        @foreach ($qa as $key => $col)
+
+
+
+                                <!--Block-->
+                        <li class="accordion block active-block">
+                            <div class="acc-btn @if($key == 0) active @endif"><div class="icon-outer"><span class="icon fa fa-arrow-circle-right"></span> </div>{{$col['title']}}</div>
+                            <div class="acc-content @if($key == 0) current @endif">
+                                <div class="content"><p>
+                                        {!! $col['description'] !!}
+                                    </p></div>
                             </div>
-                        </div>
-                    </div>
-                    @endforeach
+                        </li>
+
+                        @endforeach
+
+
+
+
+                    </ul>
+
+
+
+
+
+
                     @if($totalNum <= 0)
                         <div class="news-style-two col-md-12 col-sm-12 col-xs-12 text-center">
                             ※無相關資訊
@@ -60,6 +69,7 @@
                 <!-- Styled Pagination -->
                 <div class="styled-pagination">
                     <ul class="clearfix">
+
                         {!! $pageList !!}
                     </ul>
                 </div>
@@ -79,7 +89,7 @@
 
 
                             @foreach ($subCategory as $col)
-                                <li><a href="/news/1/{{$col->guid}}">{{$col->title}} <span>({{$col->countNum}})</span></a></li>
+                                <li><a href="/qa/1/{{$col->guid}}">{{$col->title}} <span>({{$col->countNum}})</span></a></li>
                             @endforeach
 
                         </ul>

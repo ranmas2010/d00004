@@ -31,6 +31,10 @@ Route::get('/news/{page?}/{category?}', 'Controller@news');
 //最新消息-內頁
 Route::get('/new/{guid?}', 'Controller@newsDetail');
 
+
+//常見問題
+Route::get('/qa/{page?}/{category?}', 'Controller@qa');
+
 //ABOUT
 Route::get('/about', 'Controller@about');
 
@@ -55,9 +59,9 @@ Route::get('/checkMember/{codes}', 'Controller@checkMember');
 //購物列表
 Route::get('/car', 'Controller@car');
 Route::get('/checkout', 'Controller@checkout');
-Route::get('/pay', 'Controller@pay');
+Route::get('/payUse/{codes}', 'Controller@payUse');
 Route::post('/payEnd', 'Controller@payEnd');
-Route::get('/complete', 'Controller@complete');
+Route::get('/complete/{or_no}', 'Controller@complete');
 Route::post('/payRe', 'Controller@payRe');
 
 //登入
@@ -76,18 +80,18 @@ Route::get('/my-profile', 'Controller@myProfile');
 Route::get('/my-password', 'Controller@myPassword');
 
 //我的訂單
-Route::get('/my-order', 'Controller@myOrder');
+Route::get('/my-order/{page?}', 'Controller@myOrder');
+
+Route::get('/order-detail/{guid?}', 'Controller@orderDetail');
 
 //會員登出
 Route::get('/logout', 'Controller@logout');
 
+
+
+
 //==========================================================================================================
 //==========================================================================================================
-
-
-
-
-
 
 
 
@@ -154,7 +158,7 @@ Route::get('stageAdmin/{uri}/{types?}/{id?}',function($uri, $types  = null , $id
 	$valData = array();//修改用
 	$useColData = array();//列表用
 	$listColumns = '';//列表用
-
+	session(['thisTable' => $data["tables"]]);//紀錄session
 	$data['prevUrl'] = '';//回上層用
 	$data['adminMenu'] = httpFunction::adminMenu('Y');//後台選單
 	$colData = httpFunction::getTableColumns($data["tables"]);

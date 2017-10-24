@@ -50,6 +50,7 @@
                                             <!-- check-out start -->
                                             <div class="tab-pane active" id="check-out">
                                                 <form action="" id="orderForm" name="orderForm" method="post">
+
                                                     <div class="shop-cart-table check-out-wrap">
                                                         <div class="row">
                                                             <div class="col-md-6 col-sm-6 col-xs-12 contact-form">
@@ -75,10 +76,13 @@
                                                                         <input type="email" name="email" id="email" placeholder="E-mail *" required value="@if(count($memberData)>0){{$memberData->username}}@endif">
                                                                         <div class="_formErrorMsg"></div>
                                                                     </div>
+
+
                                                                     <div class="form-group">
                                                                         <input type="text" name="zip" id="zip" placeholder="郵遞區號 *" required value="@if(count($memberData)>0){{$memberData->zip}}@endif">
                                                                         <div class="_formErrorMsg"></div>
                                                                     </div>
+
                                                                     <div class="form-group">
                                                                     <select class="custom-select mb-15 changeCityData" class="changeCityData" data-next="district"  data-zip="zip" data-type="city"  name="city" id="city" required>
                                                                         <option value="">縣市</option>
@@ -101,14 +105,32 @@
                                                                     </div>
 
                                                                     <div class="form-group">
+                                                                        <input type="text" name="address" id="address" placeholder="地址 *" required value="@if(count($memberData)>0){{$memberData->address}}@endif">
+                                                                        <div class="_formErrorMsg"></div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group">
+                                                                        <select class="custom-select mb-15"  name="invoice" id="invoice" required>
+                                                                            <option value="1">發票捐贈</option>
+                                                                            <option value="2">二聯式發票</option>
+                                                                            <option value="3">三聯式發票</option>
+                                                                        </select>
+                                                                        <div class="_formErrorMsg"></div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group invoiceLay" style="display: none;">
+                                                                        <input type="text" name="invoice_title" id="invoice_title" placeholder="公司抬頭 *" required value="">
+                                                                        <input type="text" name="invoice_code" id="invoice_code" placeholder="統一編號 *" required value="">
+                                                                        <div class="_formErrorMsg"></div>
+                                                                    </div> 
+
+                                                                    <div class="form-group">
                                                                     <textarea class="custom-textarea" name="notes" id="notes" placeholder="其他備註..." ></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
-
-
                                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                                 <div class="our-order payment-details mt-60 pr-20">
                                                                     <h4 class="title-1 title-border text-uppercase mb-30">訂單列表</h4>
@@ -158,9 +180,9 @@
                                                                         </div>
                                                                         <!-- Accordion end -->
                                                                         <!-- Accordion start -->
-                                                                        <h3 class="payment-accordion-toggle changePayType"><label><input type="radio" class="payType" name="payType"  value="BARCODE">超商條碼</label></h3>
+                                                                        <h3 class="payment-accordion-toggle changePayType"><label><input type="radio" class="payType" name="payType"  value="CVS">超商代碼</label></h3>
                                                                         <div class="payment-content">
-                                                                            <p>Pay via PayPal; you can pay with your credit card if you don�t have a PayPal account.</p>
+                                                                            <p>系統會提供您所選擇之超商編號，取得編碼後請前往超商相關機台輸入編號取得繳費條碼</p>
 
                                                                         </div>
                                                                         <!-- Accordion end -->

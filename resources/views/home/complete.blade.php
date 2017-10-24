@@ -11,7 +11,7 @@
             <h1>購物車</h1>
             <ul class="bread-crumb">
                 <li><a href="/">Home</a></li>
-                <li>購物車</li>
+                <li>完成購物</li>
 
             </ul>
         </div>
@@ -45,25 +45,89 @@
                                 <p style="font-size: 21px;">感謝您的購買！</p>
                             </div>
                             <hr>
+
                             <div class="order-info bg-white text-center clearfix mb-30">
                                 <div class="single-order-info">
                                     <h4 class="title-1 text-uppercase text-light-black mb-0">訂單編號</h4>
-                                    <p class="text-uppercase text-light-black mb-0"><strong>m 2653257</strong></p>
+                                    <p class="text-uppercase text-light-black mb-0"><strong>{{$order['or_no']}}</strong></p>
                                 </div>
                                 <div class="single-order-info">
                                     <h4 class="title-1 text-uppercase text-light-black mb-0">訂單日期</h4>
-                                    <p class="text-uppercase text-light-black mb-0"><strong>june 15, 2016</strong></p>
+                                    <p class="text-uppercase text-light-black mb-0"><strong>{{substr($order['date'],0,10)}}</strong></p>
                                 </div>
                                 <div class="single-order-info">
                                     <h4 class="title-1 text-uppercase text-light-black mb-0">總金額</h4>
-                                    <p class="text-uppercase text-light-black mb-0"><strong>$ 170.00</strong></p>
+                                    <p class="text-uppercase text-light-black mb-0"><strong>$ {{$order['total_price']}}</strong></p>
                                 </div>
+
+                            </div>
+
+                            <div class="order-info bg-white text-center clearfix mb-30">
                                 <div class="single-order-info">
                                     <h4 class="title-1 text-uppercase text-light-black mb-0">付款方式</h4>
-                                    <p class="text-uppercase text-light-black mb-0"><a href="#"><strong>check payment</strong></a></p>
+                                    <p class="text-uppercase text-light-black mb-0"><a href="#1"><strong>{{$order['payTypeText']}}</strong></a></p>
                                 </div>
+
+
+                                <div class="single-order-info">
+                                @if($order['payType'] == 'ATM')
+                                    <div >
+                                        <div class="text-left">繳款銀行代碼：<a href="#1"><b>{{$order['payData']->BankCode}}</b></a></div>
+                                        <div class="text-left">繳款銀行名稱：<a href="#1"><b>{{$order['payData']->bank_title}}</b></a></div>
+                                        <div class="text-left">繳款帳號：<a href="#1"><b>{{$order['payData']->vAccount}}</b></a></div>
+                                        <div class="text-left">繳費期限：<a href="#1"><b>{{$order['payData']->ExpireDate}}</b></a></div>
+                                    </div>
+                                @endif
+                                @if($order['payType'] == 'CVS')
+                                    <div>
+                                        <div class="text-left">繳費代碼：<a href="#1"><b>{{$order['payData']->PaymentNo}}</b></a></div>
+                                        <div class="text-left">繳費期限：<a href="#1"><b>{{$order['payData']->ExpireDate}}</b></a></div>
+                                    </div>
+                                @endif
+                                </div>
+
+
                             </div>
+
                             <div class="shop-cart-table check-out-wrap">
+
+                                <!-- payment-method -->
+                                <div class="col-md-6 col-sm-6 col-sm-12 mt-xs-30">
+                                    <div class="payment-method  pl-20">
+                                        <h4 class="title-1 title-border text-uppercase mb-30" style="padding-bottom: 10px;">基本資料</h4>
+                                        <div class="payment-accordion" >
+
+                                            <!-- Accordion start  -->
+                                            <h3 >訂單狀態：{{$order['statusText']}}</h3>
+                                            @if($order['company'] != '')
+                                                <div class="payment-content default">
+                                                    <p>公司名稱：{{$order['company']}}</p>
+                                                </div>
+                                            @endif
+                                            <div class="payment-content default">
+                                                <p>姓名：{{$order['name']}}</p>
+                                            </div>
+                                            <div class="payment-content default">
+                                                <p>地址：({{$order['zip']}}){{$order['city']}}{{$order['district']}}{{$order['address']}}</p>
+                                            </div>
+                                            <div class="payment-content default">
+                                                <p>E-mail：{{$order['email']}}</p>
+                                            </div>
+                                            <div class="payment-content default">
+                                                <p>聯絡電話：{{$order['phone']}}</p>
+                                            </div>
+                                            <div class="payment-content default">
+                                                <p>行動電話：{{$order['mobile']}}</p>
+                                            </div>
+                                            <div class="payment-content default">
+                                                <p>備註說明：{{$order['notes']}}</p>
+                                            </div>
+                                            <!-- Accordion end -->
+
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-sm-12">
                                         <div class="our-order payment-details pr-20">
@@ -76,56 +140,36 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr>
-                                                    <td>Dummy Product Name  x 2</td>
-                                                    <td class="text-right">$86.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Dummy Product Name  x 1</td>
-                                                    <td class="text-right">$69.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cart Subtotal</td>
-                                                    <td class="text-right">$155.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shipping and Handing</td>
-                                                    <td class="text-right">$15.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Vat</td>
-                                                    <td class="text-right">$00.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Order Total</td>
-                                                    <td class="text-right">$170.00</td>
-                                                </tr>
+
+                                                @if(count($order_spec) >0)
+                                                    @foreach ($order_spec as $col)
+                                                        <tr>
+                                                            <td><a href="/work/{{$col->puid}}" target="_blank">{{$col->title}}</a>  x {{$col->qty}}</td>
+                                                            <td class="text-right">${{$col->qty * $col->price}}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                                @if(!empty($order['fare_price']) && $order['fare_price'] > 0)
+                                                    <tr>
+                                                        <td>運費</td>
+                                                        <td class="text-right">${{$order['fare_price']}}</td>
+                                                    </tr>
+                                                @endif
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
-                                    <!-- payment-method -->
-                                    <div class="col-md-6 col-sm-6 col-sm-12 mt-xs-30">
-                                        <div class="payment-method  pl-20">
-                                            <h4 class="title-1 title-border text-uppercase mb-30" style="padding-bottom: 10px;">付款方式</h4>
-                                            <div class="payment-accordion" >
 
-                                                <!-- Accordion start  -->
-                                                <h3 class="payment-accordion-toggle active">Direct Bank Transfer</h3>
-                                                <div class="payment-content default">
-                                                    <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won't be shipped until the funds have cleared in our account.</p>
-                                                </div>
-                                                <!-- Accordion end -->
-
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </form>
                     </div>
                     </div>
                     <!-- order-complete end -->
+
+                    <div class="col-md-12 col-sm-6 col-sm-12 text-center">
+                        <button type="button" class="theme-btn btn-style-one" onclick="window.location.href='/'">回首頁</button>
+                    </div>
 
                 </div>
             </div>

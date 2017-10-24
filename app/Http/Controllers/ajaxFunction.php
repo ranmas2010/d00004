@@ -91,6 +91,11 @@ class ajaxFunction extends BaseController
 			case "editPassword":
 				$reSaveForm = ajaxFunction::editPassword($rowData);
 				break;
+
+			case "delOrder":
+				$reSaveForm = ajaxFunction::delOrder($rowData);
+				break;
+
 		}
 
 		$arr = array_merge($arr,$reSaveForm);
@@ -99,6 +104,35 @@ class ajaxFunction extends BaseController
 		return $arr;
 
 	}
+
+
+
+	/**
+	 * 取消訂單
+	 * @param $rowData
+	 * @return array
+	 */
+	public static function delOrder($rowData)
+	{
+		$re = array('re' => 'Y');
+
+		//再次判斷訂單狀態
+		$getData = DB::select("select status from `order_data` where guid=?" , array($rowData['guid']));
+
+		//可取消
+		if($getData[0]->status == 'N')
+		{
+
+			$saveData = array('editID'=>$rowData['guid'] , 'status'=>'C');
+			DbFunction::UpdateDB('order_data', $saveData);
+		}
+		else
+		{
+			$re['re'] = 'C';
+		}
+		return $re;
+	}
+
 
 	/**
 	 * 修改密碼
@@ -723,7 +757,7 @@ class ajaxFunction extends BaseController
 						//資料庫有資料 x 修改有資料 --> 修改
 						if(in_array($langData["codes"],$isUseLang) )
 						{
-							$saveData[$langData["codes"]]["editID"] = (int)$tempData2["id"];
+							$saveData[$langData["codes"]]["id"] = (int)$tempData2["id"];
 							$re['re'] = DbFunction::UpdateDB($rowData["tables"] , $saveData[$langData["codes"]]);
 						}
 
@@ -1010,8 +1044,6 @@ class ajaxFunction extends BaseController
 	 * @return array
 	 */
 	public static  function contact($rowData){
-
-
 
 
 

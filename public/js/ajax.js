@@ -1,5 +1,55 @@
 $(document).ready(function () {
 
+	//點選發票三聯
+	$('#invoice').change(function(){
+
+		if($(this).val() == '3')
+		{
+			$('.invoiceLay').show();
+		}
+		else
+		{
+			$('.invoiceLay').hide();
+		}
+
+
+
+	});
+
+	//刪除訂單
+	$('.delOrder').click(function(){
+
+		var guid = $(this).attr('data-value');
+
+		swal({
+				title: "系統確認",
+				text: "您確定要取消該筆訂單?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "確定!",
+				closeOnConfirm: false,
+				cancelButtonText: "取消",
+			},
+			function(){
+				//swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+				var valsTemp = new Array();
+
+				var arr = new Object();
+				arr.name = 'guid';
+				arr.value = guid;
+				valsTemp.push(arr);
+
+				var vals = JSON.stringify(valsTemp);
+
+				useAjax("delOrder" , vals);
+			});
+
+
+
+	});
+
 
 	//更換付款方式
 	$("body").delegate(".changePayType", "click", function(){
@@ -869,7 +919,7 @@ $(document).ready(function () {
 				//圖片判斷處理--------------------------------------------------
 
 
-						var valsTemp = $("#serviceForm").find('input,select,radio,checkbox:not([class*=languageCkBox]),textarea:not([class*=Ckeditor])').serializeArray();
+						var valsTemp = $("#serviceForm").find('input:not([class*=ePrice]),select,radio,checkbox:not([class*=languageCkBox]),textarea:not([class*=Ckeditor])').serializeArray();
 
 						$('.Ckeditor').each(function () {
 
@@ -879,6 +929,17 @@ $(document).ready(function () {
 							valsTemp.push(newArr);
 
 						});
+
+
+
+					$('.price').each(function () {
+
+						var newArr = {};
+						newArr["name"] = $(this).attr('name');
+						newArr["value"] = $(this).val().replace('$','').replace(',','');
+						valsTemp.push(newArr);
+
+					});
 
 					var lang = "";
 
@@ -1398,6 +1459,47 @@ function useAjax(ACT , needVal){
 
 			switch(json.Func)
 			{
+
+				//取消訂單
+				case "delOrder":
+
+					if(json.re =='C')
+					{
+						swal({
+								title: "系統資訊",
+								text: "該筆訂單已無法取消，請洽詢客服人員!",
+								type: "warning",
+								showCancelButton: false,
+								confirmButtonText: "確定",
+								closeOnConfirm: false
+							},
+							function(){
+
+								//window.location.href='/member_edit';
+
+							});
+
+
+					}
+					else
+					{
+						swal({
+								title: "系統資訊",
+								text: "您已取消訂單!",
+								type: "warning",
+								showCancelButton: false,
+								confirmButtonText: "確定",
+								closeOnConfirm: false
+							},
+							function(){
+
+								window.location.reload();
+
+							});
+
+					}
+
+					break;
 				//修改密碼
 				case "editPassword":
 
@@ -1485,7 +1587,11 @@ function useAjax(ACT , needVal){
 								cancelButtonText: "取消",
 							},
 							function(){
-								window.location.href= '/pay';
+
+								var a=Math.floor(Math.random()*(100000-0));
+
+								window.location.href= '/payUse/'+a;
+								return false;
 							});
 
 					}
